@@ -16,7 +16,7 @@ export default function ConsultationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-50 text-gray-800">
       <header className="p-4 flex justify-between items-center bg-white bg-opacity-80 backdrop-blur-md">
-        <h1 className="text-2xl font-bold text-indigo-600">SkinAI</h1>
+        <h1 className="text-2xl font-bold text-indigo-600">HealthLens</h1>
         <nav className="flex items-center space-x-4">
           <Button variant="ghost" onClick={() => navigate('/')}>Home</Button>
           <Button variant="ghost" onClick={() => navigate('/encyclopedia')}>Encyclopedia</Button>

@@ -99,7 +99,7 @@ export default function HealthEncyclopedia() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-50 text-gray-800">
       <header className="p-4 flex justify-between items-center bg-white bg-opacity-80 backdrop-blur-md">
-        <h1 className="text-2xl font-bold text-indigo-600">SkinAI</h1>
+        <h1 className="text-2xl font-bold text-indigo-600">HealthLens</h1>
         <nav className="flex items-center space-x-4">
           <Button variant="ghost" onClick={() => navigate('/')}>Home</Button>
           <Button variant="ghost" onClick={handleAboutClick}>About</Button>
@@ -113,7 +113,7 @@ export default function HealthEncyclopedia() {
               <path d="M19.615 6.035c-.556-.557-1.24-.84-2.055-.84-1.876-.03-3.755-.035-5.625-.035-1.87 0-3.745.005-5.625.035-.815 0-1.5.283-2.055.84-.556.556-.835 1.244-.835 2.06-.03 1.873-.035 3.752-.035 5.625s.005 3.745.035 5.625c0 .815.279 1.5.835 2.055.556.556 1.244.835 2.055.835 1.876.03 3.755.035 5.625.035 1.87 0 3.745-.005 5.625-.035.815 0 1.5-.279 2.055-.835.556-.556.835-1.24.835-2.055.03-1.876.035-3.755.035-5.625s-.005-3.755-.035-5.625c0-.815-.279-1.5-.835-2.055zm-10.905 8.46v-4.995l5.195 2.505-5.195 2.49z" />
             </svg>
           </a>
-          <a href="https://github.com/ericfly02/SkinAI" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/ericfly02/Frontend-HealthLens" target="_blank" rel="noopener noreferrer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -149,7 +149,7 @@ export default function HealthEncyclopedia() {
           className="max-w-6xl mx-auto"
         >
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <h1 className="text-3xl font-bold text-indigo-800 mb-4">SkinAI Health Encyclopedia</h1>
+            <h1 className="text-3xl font-bold text-indigo-800 mb-4">HealthLens Health Encyclopedia</h1>
             <p className="text-indigo-600 mb-6">Your Comprehensive Guide to Skin, Eye, and Nail Conditions</p>
             
             <section className="mb-8">

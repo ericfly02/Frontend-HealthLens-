@@ -45,13 +45,13 @@ export default function MainPage() {
     let apiUrl;
     switch (imageType) {
       case 'eye':
-        apiUrl = 'http://localhost:5000/predict/cataracts';
+        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/cataracts';
         break;
       case 'nail':
-        apiUrl = 'http://localhost:5000/predict/nails';
+        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/nails';
         break;
       case 'skin':
-        apiUrl = 'http://localhost:5000/predict/skin';
+        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/skin';
         break;
       default:
         return;
@@ -170,7 +170,7 @@ export default function MainPage() {
               <path d="M19.615 6.035c-.556-.557-1.24-.84-2.055-.84-1.876-.03-3.755-.035-5.625-.035-1.87 0-3.745.005-5.625.035-.815 0-1.5.283-2.055.84-.556.556-.835 1.244-.835 2.06-.03 1.873-.035 3.752-.035 5.625s.005 3.745.035 5.625c0 .815.279 1.5.835 2.055.556.556 1.244.835 2.055.835 1.876.03 3.755.035 5.625.035 1.87 0 3.745-.005 5.625-.035.815 0 1.5-.279 2.055-.835.556-.556.835-1.24.835-2.055.03-1.876.035-3.755.035-5.625s-.005-3.755-.035-5.625c0-.815-.279-1.5-.835-2.055zm-10.905 8.46v-4.995l5.195 2.505-5.195 2.49z" />
             </svg>
           </a>
-          <a href="https://github.com/ericfly02/SkinAI" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/ericfly02/Frontend-HealthLens" target="_blank" rel="noopener noreferrer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
