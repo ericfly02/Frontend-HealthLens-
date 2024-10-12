@@ -24,7 +24,7 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
     e.preventDefault();
     
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', {
+      const response = await axios.post('https://backend-health-lens.vercel.app/auth/login', {
         email: email,
         password: password,
       });

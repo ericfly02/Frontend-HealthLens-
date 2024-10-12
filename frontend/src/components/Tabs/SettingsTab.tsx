@@ -56,7 +56,7 @@ const SettingsTab = ({ userData }: SettingsTabProps) => {
       const token = localStorage.getItem('token')
       
       const response = await axios.patch(
-        'http://localhost:3001/user/update',
+        'https://backend-health-lens.vercel.app/user/update',
         {
           name: formData.name,
           last_name: formData.last_name,

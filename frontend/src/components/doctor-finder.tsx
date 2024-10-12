@@ -48,7 +48,7 @@ const DoctorFinder: React.FC = () => {
     console.log('Fetching nearby doctors:', { lat, lng, specialty });
   
     try {
-      const response = await fetch(`http://localhost:3001/map/nearby-doctors?lat=${lat}&lng=${lng}&specialty=${encodeURIComponent(specialty)}`);
+      const response = await fetch(`https://backend-health-lens.vercel.app/map/nearby-doctors?lat=${lat}&lng=${lng}&specialty=${encodeURIComponent(specialty)}`);
       console.log('Response status:', response.status);
       if (!response.ok) {
         throw new Error('Network response was not ok');

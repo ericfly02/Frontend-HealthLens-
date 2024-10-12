@@ -35,7 +35,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         formData.append('audio', audioBlob);
 
         // Send the audio to the backend for IBM Speech to Text processing
-        await axios.post('http://localhost:3001/speech/speech-to-text', formData, {
+        await axios.post('https://backend-health-lens.vercel.app/speech/speech-to-text', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

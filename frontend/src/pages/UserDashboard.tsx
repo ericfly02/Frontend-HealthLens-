@@ -40,7 +40,7 @@ export default function UserDashboard() {
       try {
         const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
 
-        const response = await axios.get('http://localhost:3001/user/me', {
+        const response = await axios.get('https://backend-health-lens.vercel.app/user/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -73,7 +73,7 @@ export default function UserDashboard() {
         //recentSymptoms: userData?.recentSymptoms,
       };
     
-      await axios.post('http://localhost:3001/user/email-report', reportData, {
+      await axios.post('https://backend-health-lens.vercel.app/user/email-report', reportData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

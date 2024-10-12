@@ -32,7 +32,7 @@ export default function Signup({ onClose, onSwitchToLogin }: SignupProps) {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/auth/signup', {
+      const response = await axios.post('https://backend-health-lens.vercel.app/auth/signup', {
         name: formData.name,
         last_name: formData.lastName,
         email: formData.email,
