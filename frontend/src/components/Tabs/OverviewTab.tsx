@@ -23,7 +23,7 @@ const OverviewTab = ({ userData }: OverviewTabProps) => {
               <BarChart2 className="h-4 w-4 text-indigo-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">28</div>
+              <div className="text-2xl font-bold">{userData?.scans }</div>
               <p className="text-xs text-gray-500">+10% from last month</p>
             </CardContent>
           </Card>
