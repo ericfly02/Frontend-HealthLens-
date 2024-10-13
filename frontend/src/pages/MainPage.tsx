@@ -72,7 +72,7 @@ export default function MainPage() {
       ]);
   
       // Assuming you have a sessionId from somewhere, e.g., stored in localStorage/sessionStorage
-      const sessionId = localStorage.getItem('sessionId') || 'some-session-id';
+      const sessionId = localStorage.getItem('sessionId') || null;
   
       // Send the prediction and sessionId to the conversation starter
       const assistantResponse = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
