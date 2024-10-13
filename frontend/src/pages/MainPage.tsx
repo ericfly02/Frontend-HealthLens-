@@ -35,14 +35,14 @@ export default function MainPage() {
     setStep(2);
     setLoading(true);
     setChatMessages([{ text: `Analyzing your ${imageType} image...`, isAI: true }]);
-
+  
     const file = event.target.files?.[0];
     if (!file) return;
-
+  
     const formData = new FormData();
     formData.append('image', file);
     formData.append('type', imageType!);
-
+  
     let apiUrl;
     switch (imageType) {
       case 'eye':
@@ -57,26 +57,34 @@ export default function MainPage() {
       default:
         return;
     }
-
+  
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      
+  
       console.log('Prediction result:', response);
-
+  
       const prediction = response.data.prediction;
       setChatMessages(prev => [
         ...prev,
         { text: `Prediction result: ${prediction}. Let's discuss your condition in more detail.`, isAI: true },
       ]);
-
-      const assistantResponse = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', { message: prediction });
+  
+      // Assuming you have a sessionId from somewhere, e.g., stored in localStorage/sessionStorage
+      const sessionId = localStorage.getItem('sessionId') || 'some-session-id';
+  
+      // Send the prediction and sessionId to the conversation starter
+      const assistantResponse = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
+        sessionId,  // Pass the sessionId here
+        disease: prediction,  // Pass the prediction result as the disease
+      });
+  
       setChatMessages(prev => [
         ...prev,
         { text: assistantResponse.data.reply, isAI: true },
       ]);
-
+  
     } catch (error) {
       console.error('Error uploading image:', error);
       setChatMessages(prev => [
@@ -87,6 +95,7 @@ export default function MainPage() {
       setLoading(false);
     }
   };
+  
 
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
