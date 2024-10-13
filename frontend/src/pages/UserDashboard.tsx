@@ -20,7 +20,7 @@ interface UserData {
   height: number;
   weight: number;
   sex: string;
-  scnas: number;
+  scans: number;
   //recentSymptoms: string[];
 }
 
@@ -69,7 +69,7 @@ export default function UserDashboard() {
         height: userData?.height,
         weight: userData?.weight,
         sex: userData?.sex,
-        scnas: userData?.scnas,
+        scans: userData?.scans,
         //recentSymptoms: userData?.recentSymptoms,
       };
     
