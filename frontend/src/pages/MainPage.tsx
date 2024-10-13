@@ -12,6 +12,7 @@ import Login from '../components/Auth/Login';
 import Signup from '../components/Auth/Signup';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import axios from 'axios';
+import Loader from "../components/ui/Loader";
 
 
 export default function MainPage() {
@@ -69,6 +70,13 @@ export default function MainPage() {
         ...prev,
         { text: `Prediction result: ${prediction}. Let's discuss your condition in more detail.`, isAI: true },
       ]);
+
+      const assistantResponse = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', { message: prediction });
+      setChatMessages(prev => [
+        ...prev,
+        { text: assistantResponse.data.reply, isAI: true },
+      ]);
+
     } catch (error) {
       console.error('Error uploading image:', error);
       setChatMessages(prev => [
@@ -79,14 +87,6 @@ export default function MainPage() {
       setLoading(false);
     }
   };
-  /*
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, imageUrl: string) => {
-    console.log('Image uploaded:', event.target.files?.[0]);
-    setUploadedImageUrl(imageUrl);
-    setStep(2);
-    setChatMessages([{ text: `I've analyzed your ${imageType} image. Let's discuss your condition in more detail.`, isAI: true }]);
-  };
-  */
 
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -220,12 +220,18 @@ export default function MainPage() {
           {step === 0 && <DiseaseOptions onImageTypeSelect={handleImageTypeSelect} />}
           {step === 1 && <UploadImage imageType={imageType} onImageUpload={handleImageUpload} />}
           {step === 2 && (
-            <Chat
-              chatMessages={chatMessages}
-              onSendMessage={handleSendMessage}
-              imageType={imageType}
-              uploadedImageUrl={uploadedImageUrl}
-            />
+            <div>
+              {loading ? (
+                <Loader />  // Show loader if image is being processed
+              ) : (
+                <Chat
+                  chatMessages={chatMessages}
+                  onSendMessage={handleSendMessage}
+                  imageType={imageType}
+                  uploadedImageUrl={uploadedImageUrl}
+                />
+              )}
+            </div>
           )}
         </AnimatePresence>
         <FeatureGrid onConsultationClick={handleConsultationClick} onDashboardClick={handleDashboardClick} onLearnMoreClick={handleEncyclopediaClick}/>
