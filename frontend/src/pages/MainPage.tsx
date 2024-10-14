@@ -49,10 +49,10 @@ export default function MainPage() {
         apiUrl = 'http://192.168.0.189/predict/cataracts';
         break;
       case 'nail':
-        apiUrl = 'http://192.168.0.189//predict/nails';
+        apiUrl = 'http://192.168.0.189/predict/nails';
         break;
       case 'skin':
-        apiUrl = 'http://192.168.0.189//predict/skin';
+        apiUrl = 'http://192.168.0.189/predict/skin';
         break;
       default:
         return;
