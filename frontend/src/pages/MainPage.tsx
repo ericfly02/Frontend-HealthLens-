@@ -46,13 +46,13 @@ export default function MainPage() {
     let apiUrl;
     switch (imageType) {
       case 'eye':
-        apiUrl = 'http://192.168.0.189/predict/cataracts';
+        apiUrl = 'https://46.172.240.200/predict/cataracts';
         break;
       case 'nail':
-        apiUrl = 'http://192.168.0.189/predict/nails';
+        apiUrl = 'https://46.172.240.200/predict/nails';
         break;
       case 'skin':
-        apiUrl = 'http://192.168.0.189/predict/skin';
+        apiUrl = 'https://46.172.240.200/predict/skin';
         break;
       default:
         return;
