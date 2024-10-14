@@ -46,13 +46,13 @@ export default function MainPage() {
     let apiUrl;
     switch (imageType) {
       case 'eye':
-        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/cataracts';
+        apiUrl = 'http://192.168.0.189/predict/cataracts';
         break;
       case 'nail':
-        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/nails';
+        apiUrl = 'http://192.168.0.189//predict/nails';
         break;
       case 'skin':
-        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/skin';
+        apiUrl = 'http://192.168.0.189//predict/skin';
         break;
       default:
         return;
