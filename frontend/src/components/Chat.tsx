@@ -141,7 +141,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                 <img src={uploadedImageUrl} alt={`Uploaded ${imageType} image`} className="w-full h-auto rounded-lg shadow-md" />
 
                 <div className="mt-4">
-                  {prediction && <PredictionCard prediction={prediction} />}
+                  {prediction && <PredictionCard prediction={prediction} confidence={90} />}
                 </div>
               </motion.div>
             )}
