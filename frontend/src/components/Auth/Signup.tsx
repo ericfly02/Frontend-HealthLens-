@@ -41,9 +41,7 @@ export default function Signup({ onClose, onSwitchToLogin }: SignupProps) {
         height: parseFloat(formData.height) || null,
         weight: parseFloat(formData.weight) || null,
         sex: formData.sex,
-      });
-      console.log('Signup successful', response.data);
-      
+      });      
       // Save the token in localStorage
       localStorage.setItem('token', response.data.token);
       navigate('/dashboard'); 

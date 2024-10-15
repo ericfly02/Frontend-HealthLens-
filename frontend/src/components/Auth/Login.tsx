@@ -28,8 +28,6 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
         email: email,
         password: password,
       });
-      console.log('Login successful', response.data);
-
       // Save the token in localStorage
       localStorage.setItem('token', response.data.token);
       navigate('/dashboard'); // Redirect to UserDashboard on success

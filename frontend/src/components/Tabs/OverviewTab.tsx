@@ -8,7 +8,6 @@ interface OverviewTabProps {
 }
 
 const OverviewTab = ({ userData }: OverviewTabProps) => {
-  console.log(userData);
   return (
     <Card>
       <CardHeader>

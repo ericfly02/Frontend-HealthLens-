@@ -64,9 +64,7 @@ export default function MainPage() {
       const response = await axios.post(apiUrl, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-  
-      console.log('Prediction result:', response);
-  
+    
       const prediction = response.data.prediction;
       const confidence = response.data.confidence;
       const confidenceAux = Number((confidence * 100).toFixed(2));
