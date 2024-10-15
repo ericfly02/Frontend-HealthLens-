@@ -124,6 +124,7 @@ const DoctorFinder: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div id="map" className="w-full h-[400px] rounded-lg overflow-hidden mb-4"></div>
+          {/* Ensure the dropdown is positioned correctly by setting z-index */}
           <div className="relative z-50">
             <Select value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
               <SelectTrigger className="w-full bg-background border border-input">
