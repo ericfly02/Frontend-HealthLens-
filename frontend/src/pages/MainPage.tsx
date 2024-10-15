@@ -109,7 +109,7 @@ export default function MainPage() {
 
         setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
     } catch (error) {
-        if ((error as any).response && (error as any).response.data && (error as any).response.data.error === 'Invalid session') {
+        if ((error as any).response && (error as any).response.data && (error as any).response.data.error === 'Invalid Session') {
             // If session is invalid, create a new session by removing the old sessionId and retry
             localStorage.removeItem('sessionId');
             console.error("Session expired. Please try again.");
