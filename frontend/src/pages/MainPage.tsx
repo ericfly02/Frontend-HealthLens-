@@ -120,6 +120,10 @@ export default function MainPage() {
 
         // Process the response from the chatbot
         const botReply = response.data.watsonResponse;
+
+        // save the sessionId to localStorage
+        localStorage.setItem('sessionId', response.data.sessionId);
+        
         setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
     } catch (error) {
         console.error("Error sending message:", error);
