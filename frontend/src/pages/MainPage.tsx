@@ -68,7 +68,8 @@ export default function MainPage() {
   
       const prediction = response.data.prediction;
       const confidence = response.data.confidence;
-      setConfidence(confidence*100);
+      const confidenceAux = Math.round((confidence + Number.EPSILON) * 100) / 100;
+      setConfidence(confidenceAux);
       setPrediction(prediction);
 
   
