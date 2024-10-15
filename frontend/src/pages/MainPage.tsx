@@ -13,6 +13,7 @@ import Signup from '../components/Auth/Signup';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import axios from 'axios';
 import Loader from "../components/ui/Loader";
+import PredictionCard from '../components/ui/PredictionCard'; 
 
 
 export default function MainPage() {
@@ -23,7 +24,8 @@ export default function MainPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [authMode, setAuthMode] = useState<'login' | 'signup' | null>(null);
-  const [loading, setLoading] = useState(false); // Loading state for AI analysis
+  const [loading, setLoading] = useState(false); 
+  const [prediction, setPrediction] = useState(''); 
 
   const handleImageTypeSelect = (type: 'skin' | 'eye' | 'nail') => {
     setImageType(type);
@@ -34,7 +36,7 @@ export default function MainPage() {
     setUploadedImageUrl(imageUrl);
     setStep(2);
     setLoading(true);
-    setChatMessages([{ text: `Analyzing your ${imageType} image...`, isAI: true }]);
+    setChatMessages([{ text: `Hi there! I am your health assistant. My specialty is providing information about your diagnosis. What questions can I answer for you?`, isAI: true }]);
   
     const file = event.target.files?.[0];
     if (!file) return;
@@ -66,25 +68,7 @@ export default function MainPage() {
       console.log('Prediction result:', response);
   
       const prediction = response.data.prediction;
-      setChatMessages(prev => [
-        ...prev,
-        { text: `Prediction result: ${prediction}. Let's discuss your condition in more detail.`, isAI: true },
-      ]);
-  
-      // Assuming you have a sessionId from somewhere, e.g., stored in localStorage/sessionStorage
-      const sessionId = localStorage.getItem('sessionId') || null;
-  
-      // Send the prediction and sessionId to the conversation starter
-      const assistantResponse = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
-        sessionId,  // Pass the sessionId here
-        disease: prediction,  // Pass the prediction result as the disease
-      });
-      console.log('Assistant response:', assistantResponse);
-  
-      setChatMessages(prev => [
-        ...prev,
-        { text: assistantResponse.data.watsonResponse, isAI: true },
-      ]);
+      setPrediction(prediction);
   
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -259,12 +243,15 @@ export default function MainPage() {
               {loading ? (
                 <Loader />  // Show loader if image is being processed
               ) : (
-                <Chat
-                  chatMessages={chatMessages}
-                  onSendMessage={handleSendMessage}
-                  imageType={imageType}
-                  uploadedImageUrl={uploadedImageUrl}
-                />
+                <>
+                  <Chat
+                    chatMessages={chatMessages}
+                    onSendMessage={handleSendMessage}
+                    imageType={imageType}
+                    uploadedImageUrl={uploadedImageUrl}
+                  />
+                  {prediction && <PredictionCard prediction={prediction} />}  {/* Display Prediction Card */}
+                </>
               )}
             </div>
           )}

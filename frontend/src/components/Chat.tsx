@@ -108,7 +108,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
               </AnimatePresence>
             </div>
             <form onSubmit={onSendMessage} className="flex gap-2">
-              <Input type="text" name="message" placeholder="Describe your symptoms..." className="flex-grow" />
+              <Input type="text" name="message" placeholder="Chat here..." className="flex-grow" />
               <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700">
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Send
