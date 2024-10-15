@@ -77,7 +77,8 @@ const UploadTab = () => {
   
       const prediction = response.data.prediction;
       const confidence = response.data.confidence;
-      setConfidence(confidence*100);
+      const truncateConfidence = Math.floor(confidence * 100) / 100;
+      setConfidence(truncateConfidence);
       setPrediction(prediction);
   
     } catch (error) {
