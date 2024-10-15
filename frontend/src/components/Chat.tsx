@@ -92,12 +92,6 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         <div className={`flex ${isFullSize ? 'flex-col' : 'flex-row'}`}>
           <div className={`${isFullSize ? 'w-full' : 'flex-1 pr-6'}`}>
             <div className="bg-indigo-50 rounded-lg p-4 h-96 overflow-y-auto mb-4">
-                      {/* Display the PredictionCard above the image if there's a prediction */}
-              {prediction && (
-                <div className="mb-4">
-                  <PredictionCard prediction={prediction} />
-                </div>
-              )}
               <AnimatePresence>
                 {chatMessages.map((message, index) => (
                   <motion.div 
@@ -145,6 +139,10 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
               >
                 <h3 className="text-2xl font-semibold mb-4 text-indigo-700">Uploaded {imageType === 'skin' ? 'Skin' : 'Eye'} Image</h3>
                 <img src={uploadedImageUrl} alt={`Uploaded ${imageType} image`} className="w-full h-auto rounded-lg shadow-md" />
+
+                <div className="mt-4">
+                  {prediction && <PredictionCard prediction={prediction} />}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
