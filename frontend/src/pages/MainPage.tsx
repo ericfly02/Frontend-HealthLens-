@@ -88,35 +88,45 @@ export default function MainPage() {
     const form = event.target as HTMLFormElement;
     const input = form.elements.namedItem('message') as HTMLInputElement;
     const userMessage = input.value;
-    
+
     // Add the user's message to the chat
     setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
     
     // Clear the input field
     form.reset();
 
-    // Prepare the API call
     try {
+        const sessionId = localStorage.getItem('sessionId') || null;
         const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
-            message: userMessage,    // Sending the user's message to the API
-            sessionId: localStorage.getItem('sessionId') || null, // Optionally send sessionId if available
+            message: userMessage,
+            sessionId,  // Send sessionId if available
         });
 
-        // Process the response from the chatbot
         const botReply = response.data.watsonResponse;
 
-        // save the sessionId to localStorage
+        // Save the new session ID
         localStorage.setItem('sessionId', response.data.sessionId);
-        
+
         setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
     } catch (error) {
-        console.error("Error sending message:", error);
-        setChatMessages(prev => [
-            ...prev,
-            { text: 'There was an error connecting to the chatbot. Please try again later.', isAI: true }
-        ]);
+        if ((error as any).response && (error as any).response.data && (error as any).response.data.error === 'Invalid session') {
+            // If session is invalid, create a new session by removing the old sessionId and retry
+            localStorage.removeItem('sessionId');
+            console.error("Session expired. Please try again.");
+            setChatMessages(prev => [
+                ...prev,
+                { text: 'Session expired. Starting a new conversation...', isAI: true }
+            ]);
+        } else {
+            console.error("Error sending message:", error);
+            setChatMessages(prev => [
+                ...prev,
+                { text: 'There was an error connecting to the chatbot. Please try again later.', isAI: true }
+            ]);
+        }
     }
-  };
+};
+
 
 
   const toggleDropdown = () => {
