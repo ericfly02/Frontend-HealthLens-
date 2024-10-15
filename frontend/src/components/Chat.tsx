@@ -13,9 +13,10 @@ interface ChatProps {
   imageType: 'skin' | 'eye' | 'nail' | null;
   uploadedImageUrl: string | null;
   prediction: string | null;
+  confidence: number | null;
 }
 
-export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction }: ChatProps) {
+export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence }: ChatProps) {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
@@ -149,7 +150,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                 <img src={uploadedImageUrl} alt={`Uploaded ${imageType} image`} className="w-full h-auto rounded-lg shadow-md" />
 
                 <div className="mt-4">
-                  {prediction && <PredictionCard prediction={prediction} confidence={90} />}
+                  {prediction && <PredictionCard prediction={prediction} confidence={confidence} />}
                 </div>
               </motion.div>
             )}

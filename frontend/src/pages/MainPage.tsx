@@ -13,8 +13,6 @@ import Signup from '../components/Auth/Signup';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import axios from 'axios';
 import Loader from "../components/ui/Loader";
-import PredictionCard from '../components/ui/PredictionCard'; 
-
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -26,6 +24,7 @@ export default function MainPage() {
   const [authMode, setAuthMode] = useState<'login' | 'signup' | null>(null);
   const [loading, setLoading] = useState(false); 
   const [prediction, setPrediction] = useState(''); 
+  const [confidence, setConfidence] = useState(0);
 
   const handleImageTypeSelect = (type: 'skin' | 'eye' | 'nail') => {
     setImageType(type);
@@ -68,7 +67,10 @@ export default function MainPage() {
       console.log('Prediction result:', response);
   
       const prediction = response.data.prediction;
+      const confidence = response.data.confidence;
+      setConfidence(confidence*100);
       setPrediction(prediction);
+
   
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -259,6 +261,7 @@ export default function MainPage() {
                     imageType={imageType}
                     uploadedImageUrl={uploadedImageUrl}
                     prediction={prediction}
+                    confidence={confidence}
                   />
               )}
             </div>
