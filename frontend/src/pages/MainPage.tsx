@@ -25,7 +25,7 @@ export default function MainPage() {
   const [authMode, setAuthMode] = useState<'login' | 'signup' | null>(null);
   const [loading, setLoading] = useState(false); 
   const [prediction, setPrediction] = useState(''); 
-  const [confidence, setConfidence] = useState(0);
+  const [confidence, setConfidence] = useState<number>(0);
 
   const handleImageTypeSelect = (type: 'skin' | 'eye' | 'nail') => {
     setImageType(type);
@@ -69,15 +69,17 @@ export default function MainPage() {
   
       const prediction = response.data.prediction;
       const confidence = response.data.confidence;
-      const confidenceAux = Math.round((confidence + Number.EPSILON) * 100);
+      const confidenceAux = Number((confidence * 100).toFixed(2));
       setConfidence(confidenceAux);
       setPrediction(prediction);
 
       // Add prediction result to chat messages
+      /*
       setChatMessages(prev => [
         ...prev,
         { text: `Based on the image, I predict: ${prediction} with ${confidenceAux}% confidence. Do you have any questions about this diagnosis?`, isAI: true },
       ]);
+      */
     } catch (error) {
       console.error('Error uploading image:', error);
       setChatMessages(prev => [

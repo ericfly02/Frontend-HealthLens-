@@ -13,8 +13,7 @@ const UploadTab = () => {
   const [chatMessages, setChatMessages] = useState<Array<{ text: string; isAI: boolean }>>([]);
   const [loading, setLoading] = useState(false); // Loading state for AI analysis
   const [prediction, setPrediction] = useState(''); 
-  const [confidence, setConfidence] = useState(0); 
-
+  const [confidence, setConfidence] = useState<number>(0);
 
   const handleBack = () => {
     if (uploadStep > 0) setUploadStep((prev) => prev - 1);
@@ -77,7 +76,7 @@ const UploadTab = () => {
   
       const prediction = response.data.prediction;
       const confidence = response.data.confidence;
-      const confidenceAux = Math.round((confidence + Number.EPSILON) * 100);
+      const confidenceAux = Number((confidence * 100).toFixed(2));
       setConfidence(confidenceAux);
       setPrediction(prediction);
   
