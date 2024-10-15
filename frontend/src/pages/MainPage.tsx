@@ -98,17 +98,38 @@ export default function MainPage() {
   };
   
 
-  const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
     const form = event.target as HTMLFormElement;
     const input = form.elements.namedItem('message') as HTMLInputElement;
     const userMessage = input.value;
+    
+    // Add the user's message to the chat
     setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
+    
+    // Clear the input field
     form.reset();
-    setTimeout(() => {
-      setChatMessages(prev => [...prev, { text: `Based on the ${imageType} image and your description, it appears to be...`, isAI: true }]);
-    }, 1000);
-  }; 
+
+    // Prepare the API call
+    try {
+        const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
+            message: userMessage,    // Sending the user's message to the API
+            sessionId: localStorage.getItem('sessionId') || null, // Optionally send sessionId if available
+        });
+
+        // Process the response from the chatbot
+        const botReply = response.data.watsonResponse;
+        setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
+    } catch (error) {
+        console.error("Error sending message:", error);
+        setChatMessages(prev => [
+            ...prev,
+            { text: 'There was an error connecting to the chatbot. Please try again later.', isAI: true }
+        ]);
+    }
+  };
+
 
   const toggleDropdown = () => {
     setIsDropdownOpen(prev => !prev);
