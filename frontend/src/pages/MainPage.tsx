@@ -46,13 +46,13 @@ export default function MainPage() {
     let apiUrl;
     switch (imageType) {
       case 'eye':
-        apiUrl = 'https://46.172.240.200/predict/cataracts';
+        apiUrl = 'https://www.healthlens.beauty/predict/cataracts';
         break;
       case 'nail':
-        apiUrl = 'https://46.172.240.200/predict/nails';
+        apiUrl = 'https://www.healthlens.beauty/predict/nails';
         break;
       case 'skin':
-        apiUrl = 'https://46.172.240.200/predict/skin';
+        apiUrl = 'https://www.healthlens.beauty/predict/skin';
         break;
       default:
         return;
