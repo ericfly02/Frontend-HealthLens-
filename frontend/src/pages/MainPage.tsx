@@ -59,7 +59,8 @@ export default function MainPage() {
     }
   
     try {
-      const response = await axios.post(apiUrl, formData, {
+      const response = await axios.post(apiUrl, formData,  {
+        withCredentials: true, 
         headers: { 'Content-Type': 'multipart/form-data' },
       });
   
