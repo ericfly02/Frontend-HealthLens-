@@ -249,7 +249,7 @@ export default function MainPage() {
           {step === 0 && <DiseaseOptions onImageTypeSelect={handleImageTypeSelect} />}
           {step === 1 && <UploadImage imageType={imageType} onImageUpload={handleImageUpload} />}
           {step === 2 && (
-            <div className="chat-container flex flex-col items-center justify-center max-w-full min-h-screen bg-white bg-opacity-50 backdrop-blur-md p-4 shadow-lg rounded-lg">
+            <div>
               {loading ? (
                 <Loader />  // Show loader if image is being processed
               ) : (
