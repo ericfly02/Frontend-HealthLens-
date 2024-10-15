@@ -12,6 +12,7 @@ const UploadTab = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState<Array<{ text: string; isAI: boolean }>>([]);
   const [loading, setLoading] = useState(false); // Loading state for AI analysis
+  const [prediction, setPrediction] = useState(''); 
 
 
   const handleBack = () => {
@@ -42,42 +43,40 @@ const UploadTab = () => {
     setUploadedImageUrl(imageUrl);
     setUploadStep(2);
     setLoading(true);
-    setChatMessages([{ text: `Analyzing your ${imageType} image...`, isAI: true }]);
-
+    setChatMessages([{ text: `Hi there! I am your health assistant. My specialty is providing information about your diagnosis. What questions can I answer for you?`, isAI: true }]);
+  
     const file = event.target.files?.[0];
     if (!file) return;
-
+  
     const formData = new FormData();
     formData.append('image', file);
     formData.append('type', imageType!);
-
+  
     let apiUrl;
     switch (imageType) {
       case 'eye':
-        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/cataracts';
+        apiUrl = 'https://www.healthlens.beauty/predict/cataracts';
         break;
       case 'nail':
-        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/nails';
+        apiUrl = 'https://www.healthlens.beauty/predict/nails';
         break;
       case 'skin':
-        apiUrl = 'https://flask-service-healthlens.onrender.com/predict/skin';
+        apiUrl = 'https://www.healthlens.beauty/predict/skin';
         break;
       default:
         return;
     }
-
+  
     try {
-      const response = await axios.post(apiUrl, formData, {
+      const response = await axios.post(apiUrl, formData,  {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      
+  
       console.log('Prediction result:', response);
-
+  
       const prediction = response.data.prediction;
-      setChatMessages(prev => [
-        ...prev,
-        { text: `Prediction result: ${prediction}. Let's discuss your condition in more detail.`, isAI: true },
-      ]);
+      setPrediction(prediction);
+  
     } catch (error) {
       console.error('Error uploading image:', error);
       setChatMessages(prev => [
@@ -114,6 +113,7 @@ const UploadTab = () => {
             onSendMessage={() => {}}
             imageType={imageType}
             uploadedImageUrl={uploadedImageUrl}
+            prediction={prediction}
           />
           <Button
             onClick={handleBack}

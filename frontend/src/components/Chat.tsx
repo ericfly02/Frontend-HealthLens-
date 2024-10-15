@@ -4,15 +4,17 @@ import { Input } from './ui/Input';
 import { Button } from './ui/Button';
 import { MessageSquare, Maximize2, Minimize2, Mic, StopCircle } from 'lucide-react';
 import axios from 'axios';
+import PredictionCard from "../components/ui/PredictionCard";
 
 interface ChatProps {
   chatMessages: Array<{ text: string; isAI: boolean }>;
   onSendMessage: (event: React.FormEvent<HTMLFormElement>) => void;
   imageType: 'skin' | 'eye' | 'nail' | null;
   uploadedImageUrl: string | null;
+  prediction: string | null;
 }
 
-export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl }: ChatProps) {
+export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction }: ChatProps) {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
@@ -90,6 +92,12 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         <div className={`flex ${isFullSize ? 'flex-col' : 'flex-row'}`}>
           <div className={`${isFullSize ? 'w-full' : 'flex-1 pr-6'}`}>
             <div className="bg-indigo-50 rounded-lg p-4 h-96 overflow-y-auto mb-4">
+                      {/* Display the PredictionCard above the image if there's a prediction */}
+              {prediction && (
+                <div className="mb-4">
+                  <PredictionCard prediction={prediction} />
+                </div>
+              )}
               <AnimatePresence>
                 {chatMessages.map((message, index) => (
                   <motion.div 

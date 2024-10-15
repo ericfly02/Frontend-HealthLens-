@@ -243,15 +243,13 @@ export default function MainPage() {
               {loading ? (
                 <Loader />  // Show loader if image is being processed
               ) : (
-                <>
                   <Chat
                     chatMessages={chatMessages}
                     onSendMessage={handleSendMessage}
                     imageType={imageType}
                     uploadedImageUrl={uploadedImageUrl}
+                    prediction={prediction}
                   />
-                  {prediction && <PredictionCard prediction={prediction} />}  {/* Display Prediction Card */}
-                </>
               )}
             </div>
           )}
