@@ -79,10 +79,11 @@ export default function MainPage() {
         sessionId,  // Pass the sessionId here
         disease: prediction,  // Pass the prediction result as the disease
       });
+      console.log('Assistant response:', assistantResponse);
   
       setChatMessages(prev => [
         ...prev,
-        { text: assistantResponse.data.reply, isAI: true },
+        { text: assistantResponse.data.watsonResponse, isAI: true },
       ]);
   
     } catch (error) {
