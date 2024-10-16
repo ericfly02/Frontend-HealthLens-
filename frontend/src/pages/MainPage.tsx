@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "../components/ui/Button";
 import DiseaseOptions from "../components/DiseaseOptions";
@@ -26,15 +26,6 @@ export default function MainPage() {
   const [loading, setLoading] = useState(false); 
   const [prediction, setPrediction] = useState(''); 
   const [confidence, setConfidence] = useState<number>(0);
-
-  // Check for token and redirect if accessing dashboard
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    if (!token && window.location.pathname === '/dashboard') {
-      openAuthModal('login')
-    }
-  }, [navigate]);
 
   const handleImageTypeSelect = (type: 'skin' | 'eye' | 'nail') => {
     setImageType(type);
