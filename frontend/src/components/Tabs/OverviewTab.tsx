@@ -8,9 +8,7 @@ interface OverviewTabProps {
 }
 
 const OverviewTab = ({ userData }: OverviewTabProps) => {
-  const diseaseAux = userData.diseases;
-  const diseasesList = Array.isArray(diseaseAux) ? diseaseAux : JSON.parse(diseaseAux);
-  const diseasesLength = diseasesList.length;
+
   return (
     <Card>
       <CardHeader>
