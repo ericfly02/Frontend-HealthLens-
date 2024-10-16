@@ -76,11 +76,11 @@ export default function UserDashboard() {
         diseases: userData?.diseases,
         //recentSymptoms: userData?.recentSymptoms,
       };
-      console.log('reportData:', reportData);
-      console.log('firstName:', reportData.firstName);
-      console.log('lastName:', reportData.lastName);
+      console.log('reportData:', userData);
+      console.log('firstName:', userData?.firstName);
+      console.log('lastName:', userData?.lastName);
     
-      await axios.post('https://backend-health-lens.vercel.app/user/email-report', reportData, {
+      await axios.post('https://backend-health-lens.vercel.app/user/email-report', userData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
