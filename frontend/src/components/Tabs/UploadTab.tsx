@@ -39,6 +39,23 @@ const UploadTab = () => {
     }
   };
 
+  const handlePrediction = async (disease: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        'https://backend-health-lens.vercel.app/user/add-disease',
+        { disease },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error adding disease:', error);
+    }
+  };
+
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, imageUrl: string) => {
     setUploadedImageUrl(imageUrl);
     setUploadStep(2);
@@ -77,6 +94,9 @@ const UploadTab = () => {
       const confidenceAux = Number((confidence * 100).toFixed(2));
       setConfidence(confidenceAux);
       setPrediction(prediction);
+
+      // Save disease to user's disease history in Supabase
+      await handlePrediction(prediction);
   
     } catch (error) {
       console.error('Error uploading image:', error);
