@@ -137,7 +137,7 @@ export default function UserDashboard() {
               <TabsList className="grid w-full grid-cols-4 rounded-lg bg-indigo-100 p-1">
                 <TabsTrigger value="overview" className="rounded-md py-2">Overview</TabsTrigger>
                 <TabsTrigger value="upload" className="rounded-md py-2">Upload</TabsTrigger>
-                <TabsTrigger value="history" className="rounded-md py-2">Chat History</TabsTrigger>
+                {/*<TabsTrigger value="history" className="rounded-md py-2">Chat History</TabsTrigger>*/}
                 <TabsTrigger value="settings" className="rounded-md py-2">Settings</TabsTrigger>
               </TabsList>
               <TabsContent value="overview">

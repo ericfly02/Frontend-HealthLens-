@@ -29,16 +29,6 @@ const OverviewTab = ({ userData }: OverviewTabProps) => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Active Chats</CardTitle>
-              <MessageSquare className="h-4 w-4 text-indigo-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">-</div>
-              <p className="text-xs text-gray-500">2 new since yesterday</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Saved Reports</CardTitle>
               <Settings className="h-4 w-4 text-indigo-600" />
             </CardHeader>
