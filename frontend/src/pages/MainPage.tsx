@@ -252,7 +252,7 @@ export default function MainPage() {
           {step === 0 && <DiseaseOptions onImageTypeSelect={handleImageTypeSelect} />}
           {step === 1 && <UploadImage imageType={imageType} onImageUpload={handleImageUpload} />}
           {step === 2 && (
-            <div className="w-full max-w-3xl mx-auto">
+            <div className="flex-grow overflow-auto">
               {loading ? (
                 <Loader />
               ) : (
