@@ -34,7 +34,6 @@ const OverviewTab = ({ userData }: OverviewTabProps) => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{userData?.reports}</div>
-              <p className="text-xs text-gray-500">View all reports</p>
             </CardContent>
           </Card>
         </div>
