@@ -2,10 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
-import { MessageSquare, Maximize2, Minimize2, Mic, StopCircle, Bot, User } from 'lucide-react';
+import { MessageSquare, Maximize2, Minimize2, Mic, StopCircle } from 'lucide-react';
 import axios from 'axios';
 import PredictionCard from "./ui/PredictionCard";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 
 interface ChatProps {
   chatMessages: Array<{ text: string; isAI: boolean }>;
@@ -52,11 +51,12 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
             },
           });
           console.log('Transcription:', response.data);
+          // You can use response.data to display the transcribed text in the chat
         } catch (error) {
           console.error('Error transcribing voice:', error);
         }
 
-        audioChunks.current = [];
+        audioChunks.current = []; // Clear audio chunks for next recording
       };
 
       setMediaRecorder(recorder);
@@ -92,7 +92,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
             size="icon"
             className="flex items-center space-x-2 text-sm"
           >
-            {isFullSize ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            {isFullSize ? <Minimize2 className="h-3 w-3 md:h-4 md:w-4" /> : <Maximize2 className="h-3 w-3 md:h-4 md:w-4" />}
             <span className="hidden md:inline">{isFullSize ? 'Split View' : 'Full Chat'}</span>
           </Button>
         </div>
@@ -107,21 +107,11 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ delay: index * 0.1 }}
-                    className={`flex items-start mb-4 ${message.isAI ? 'justify-start' : 'justify-end'}`}
+                    className={`mb-3 ${message.isAI ? 'text-left' : 'text-right'}`}
                   >
-                    {message.isAI && (
-                      <Avatar className="w-8 h-8 mr-2">
-                        <AvatarFallback><Bot className="text-indigo-600" /></AvatarFallback>
-                      </Avatar>
-                    )}
-                    <div className={`max-w-[70%] p-3 rounded-lg text-sm md:text-base ${message.isAI ? 'bg-indigo-100 text-indigo-800' : 'bg-teal-100 text-teal-800'}`}>
+                    <div className={`inline-block p-2 md:p-3 rounded-lg text-sm md:text-base ${message.isAI ? 'bg-indigo-100 text-indigo-800' : 'bg-teal-100 text-teal-800'}`}>
                       {message.text}
                     </div>
-                    {!message.isAI && (
-                      <Avatar className="w-8 h-8 ml-2">
-                        <AvatarFallback><User className="text-teal-600" /></AvatarFallback>
-                      </Avatar>
-                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -169,7 +159,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                   <img
                     src={uploadedImageUrl}
                     alt={`Uploaded ${imageType} image`}
-                    className="w-full max-h-[300px] object-contain rounded-lg shadow-md mb-3"
+                    className="w-full max-h-[300px] object-contain rounded-lg shadow-md mb-3" // Adjust max-h value as needed
                   />
                   <div className="mt-3">
                     {prediction && confidence !== null && <PredictionCard prediction={prediction} confidence={confidence} />}
@@ -178,6 +168,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
               </motion.div>
             )}
           </AnimatePresence>
+
         </div>
       </div>
     </motion.div>
