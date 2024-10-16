@@ -76,7 +76,7 @@ export default function UserDashboard() {
         diseases: userData?.diseases,
         //recentSymptoms: userData?.recentSymptoms,
       };
-
+      console.log('reportData:', reportData);
       console.log('firstName:', reportData.firstName);
       console.log('lastName:', reportData.lastName);
     
