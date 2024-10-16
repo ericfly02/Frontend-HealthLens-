@@ -8,6 +8,9 @@ interface OverviewTabProps {
 }
 
 const OverviewTab = ({ userData }: OverviewTabProps) => {
+  const diseaseAux = userData.diseases;
+  const diseasesList = Array.isArray(diseaseAux) ? diseaseAux : JSON.parse(diseaseAux);
+  const diseasesLength = diseasesList.length;
   return (
     <Card>
       <CardHeader>
@@ -32,7 +35,7 @@ const OverviewTab = ({ userData }: OverviewTabProps) => {
               <MessageSquare className="h-4 w-4 text-indigo-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold">-</div>
               <p className="text-xs text-gray-500">2 new since yesterday</p>
             </CardContent>
           </Card>
@@ -42,7 +45,7 @@ const OverviewTab = ({ userData }: OverviewTabProps) => {
               <Settings className="h-4 w-4 text-indigo-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
+              <div className="text-2xl font-bold">-</div>
               <p className="text-xs text-gray-500">View all reports</p>
             </CardContent>
           </Card>

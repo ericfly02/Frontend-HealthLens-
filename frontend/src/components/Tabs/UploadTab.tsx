@@ -109,6 +109,47 @@ const UploadTab = () => {
     }
   };
 
+  const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    const form = event.target as HTMLFormElement;
+    const input = form.elements.namedItem('message') as HTMLInputElement;
+    const userMessage = input.value;
+
+    setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
+    
+    form.reset();
+
+    try {
+        const sessionId = localStorage.getItem('sessionId') || null;
+        const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
+            message: userMessage,
+            sessionId,
+        });
+
+        const botReply = response.data.watsonResponse;
+
+        localStorage.setItem('sessionId', response.data.sessionId);
+
+        setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
+    } catch (error) {
+        if ((error as any).response?.data?.error === 'Invalid Session') {
+            localStorage.removeItem('sessionId');
+            console.error("Session expired. Please try again.");
+            setChatMessages(prev => [
+                ...prev,
+                { text: 'Session expired. Starting a new conversation...', isAI: true }
+            ]);
+        } else {
+            console.error("Error sending message:", error);
+            setChatMessages(prev => [
+                ...prev,
+                { text: 'There was an error connecting to the chatbot. Please try again later.', isAI: true }
+            ]);
+        }
+    }
+  };
+
   return (
     <div>
       {uploadStep === 0 && (
@@ -131,7 +172,7 @@ const UploadTab = () => {
         <>
           <Chat
             chatMessages={chatMessages}
-            onSendMessage={() => {}}
+            onSendMessage={handleSendMessage}
             imageType={imageType}
             uploadedImageUrl={uploadedImageUrl}
             prediction={prediction}
