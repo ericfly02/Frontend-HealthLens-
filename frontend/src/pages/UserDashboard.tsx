@@ -22,6 +22,7 @@ interface UserData {
   sex: string;
   scans: number;
   reports: number;
+  diseases: string[];
   //recentSymptoms: string[];
 }
 
@@ -72,6 +73,7 @@ export default function UserDashboard() {
         sex: userData?.sex,
         scans: userData?.scans,
         reports: userData?.reports,
+        diseases: userData?.diseases,
         //recentSymptoms: userData?.recentSymptoms,
       };
     
