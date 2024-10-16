@@ -5,7 +5,6 @@ import { Button } from './ui/Button';
 import { MessageSquare, Maximize2, Minimize2, Mic, StopCircle } from 'lucide-react';
 import axios from 'axios';
 import PredictionCard from "../components/ui/PredictionCard";
-import styles from './Chat.module.css';
 
 interface ChatProps {
   chatMessages: Array<{ text: string; isAI: boolean }>;
@@ -45,8 +44,10 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
           },
         }).then((response) => {
           // Handle response from IBM Speech to Text
-          //console.log(response.data);
-          // You can use response.data to display the transcribed text in the chat
+          // Assuming response.data returns the transcribed text
+          const transcribedText = response.data.transcribedText; // Adjust according to your backend response
+          // You may want to display the transcribed text in the chat or call onSendMessage
+          // For example: onSendMessage(transcribedText);
         }).catch((error) => {
           console.error('Error transcribing voice:', error);
         });
@@ -93,50 +94,50 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         </div>
         <div className={`flex ${isFullSize ? 'flex-col' : 'flex-row'}`}>
           <div className={`${isFullSize ? 'w-full' : 'flex-1 pr-6'}`}>
-          <div className="bg-indigo-50 rounded-lg p-4 h-96 overflow-y-auto mb-4">
-            <AnimatePresence>
-              {chatMessages.map((message, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`mb-4 ${message.isAI ? 'text-left' : 'text-right'}`}  // Align based on sender
-                >
-                  <div className={`inline-block p-3 rounded-lg ${message.isAI ? 'bg-indigo-100 text-indigo-800' : 'bg-teal-100 text-teal-800'}`}>
-                    {message.text}
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+            <div className="bg-indigo-50 rounded-lg p-4 h-96 overflow-y-auto mb-4">
+              <AnimatePresence>
+                {chatMessages.map((message, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`mb-4 ${message.isAI ? 'text-left' : 'text-right'}`}  // Align based on sender
+                  >
+                    <div className={`inline-block p-3 rounded-lg ${message.isAI ? 'bg-indigo-100 text-indigo-800' : 'bg-teal-100 text-teal-800'}`}>
+                      {message.text}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
 
-          {/* Chat Input and Buttons */}
-          <form onSubmit={onSendMessage} className="flex gap-2">
-            <Input
-              type="text"
-              name="message"
-              placeholder="Chat here..."
-              className="flex-grow bg-white border border-gray-300 rounded-lg p-2"
-            />
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg flex items-center">
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Send
-            </Button>
-            {isRecording ? (
-              <Button onClick={handleStopRecording} className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg flex items-center">
-                <StopCircle className="h-4 w-4 mr-2" />
-                Stop
+            {/* Chat Input and Buttons */}
+            <form onSubmit={onSendMessage} className="flex gap-2">
+              <Input
+                type="text"
+                name="message"
+                placeholder="Chat here..."
+                className="flex-grow bg-white border border-gray-300 rounded-lg p-2"
+              />
+              <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg flex items-center">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Send
               </Button>
-            ) : (
-              <Button onClick={handleStartRecording} className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg flex items-center">
-                <Mic className="h-4 w-4 mr-2" />
-                Record
-              </Button>
-            )}
-          </form>
-        </div>
+              {isRecording ? (
+                <Button onClick={handleStopRecording} className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg flex items-center">
+                  <StopCircle className="h-4 w-4 mr-2" />
+                  Stop
+                </Button>
+              ) : (
+                <Button onClick={handleStartRecording} className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg flex items-center">
+                  <Mic className="h-4 w-4 mr-2" />
+                  Record
+                </Button>
+              )}
+            </form>
+          </div>
           <AnimatePresence>
             {(!isFullSize && uploadedImageUrl) && (
               <motion.div
