@@ -146,9 +146,11 @@ export default function UserDashboard() {
               <TabsContent value="upload">
                 <UploadTab />
               </TabsContent>
-              <TabsContent value="history">
-                <HistoryTab />
-              </TabsContent>
+              {/*
+             <TabsContent value="history">
+               <HistoryTab />
+             </TabsContent>
+             */}
               <TabsContent value="settings">
                 <SettingsTab userData={userData}/>
               </TabsContent>
