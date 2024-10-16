@@ -139,6 +139,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Send
                 </Button>
+                {/*
                 {isRecording ? (
                   <Button onClick={handleStopRecording} className="flex-1 md:flex-none bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg flex items-center justify-center text-sm">
                     <StopCircle className="h-4 w-4 mr-2" />
@@ -150,6 +151,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                     Record
                   </Button>
                 )}
+                */}
               </div>
             </form>
           </div>
