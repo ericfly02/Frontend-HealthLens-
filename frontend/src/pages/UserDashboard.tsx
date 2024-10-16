@@ -76,7 +76,6 @@ export default function UserDashboard() {
         diseases: userData?.diseases,
         //recentSymptoms: userData?.recentSymptoms,
       };
-      console.log('reportData:', userData);
     
       await axios.post('https://backend-health-lens.vercel.app/user/email-report', userData, {
         headers: {
