@@ -125,7 +125,6 @@ export default function HealthEncyclopedia() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onSelect={() => handleNavigation('/login')}>Login</DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => handleNavigation('/signup')}>Sign Up</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleNavigation('/dashboard')}>Dashboard</DropdownMenuItem>
               </DropdownMenuContent>
             )}
           </DropdownMenu>
@@ -147,7 +146,6 @@ export default function HealthEncyclopedia() {
             <Button variant="ghost" className="w-full justify-start mb-2" onClick={() => handleNavigation('/about')}>About</Button>
             <Button variant="ghost" className="w-full justify-start mb-2" onClick={() => handleNavigation('/login')}>Login</Button>
             <Button variant="ghost" className="w-full justify-start mb-2" onClick={() => handleNavigation('/signup')}>Sign Up</Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => handleNavigation('/dashboard')}>Dashboard</Button>
           </motion.div>
         )}
       </AnimatePresence>
