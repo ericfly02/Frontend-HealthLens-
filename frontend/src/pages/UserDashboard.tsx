@@ -21,7 +21,6 @@ interface UserData {
   weight: number;
   sex: string;
   scans: number;
-  diseases: string[];
   //recentSymptoms: string[];
 }
 
@@ -40,8 +39,6 @@ export default function UserDashboard() {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
-
-        
 
         const response = await axios.get('https://backend-health-lens.vercel.app/user/me', {
           headers: {
@@ -73,11 +70,8 @@ export default function UserDashboard() {
         weight: userData?.weight,
         sex: userData?.sex,
         scans: userData?.scans,
-        diseases: userData?.diseases,
         //recentSymptoms: userData?.recentSymptoms,
       };
-
-      console.log("Diseases: ", reportData.diseases);
     
       await axios.post('https://backend-health-lens.vercel.app/user/email-report', reportData, {
         headers: {
