@@ -5,8 +5,6 @@ import DiseaseOptions from '../DiseaseOptions';
 import UploadImage from '../UploadImage';
 import Chat from '../Chat';
 import axios from 'axios';
-import Loader from "../ui/Loader";
-
 
 const UploadTab = () => {
   const [uploadStep, setUploadStep] = useState(0);
@@ -172,21 +170,14 @@ const UploadTab = () => {
       )}
       {uploadStep === 2 && (
         <>
-            <div className="flex-grow overflow-auto">
-              {loading ? (
-                <Loader />
-              ) : (
-                <Chat
-                  chatMessages={chatMessages}
-                  onSendMessage={handleSendMessage}
-                  imageType={imageType}
-                  uploadedImageUrl={uploadedImageUrl}
-                  prediction={prediction}
-                  confidence={confidence}
-                />
-              
-              )}
-            </div>
+          <Chat
+            chatMessages={chatMessages}
+            onSendMessage={() => {}}
+            imageType={imageType}
+            uploadedImageUrl={uploadedImageUrl}
+            prediction={prediction}
+            confidence={confidence}
+          />
           <Button
             onClick={handleBack}
             variant="outline"
