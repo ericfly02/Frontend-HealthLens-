@@ -82,6 +82,17 @@ export default function UserDashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      await axios.post(
+        'https://backend-health-lens.vercel.app/user/increment-reports', 
+        {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
     
       alert('Report has been sent to your email!');
     } catch (err) {
