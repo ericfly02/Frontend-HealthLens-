@@ -200,9 +200,8 @@ export default function MainPage() {
             </DropdownMenuTrigger>
             {isDropdownOpen && (
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={() => openAuthModal('login')}>Login</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => openAuthModal('signup')}>Sign Up</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleNavigation('/dashboard')}>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openAuthModal('login')}>Login  </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openAuthModal('signup')}>Sign Up  </DropdownMenuItem>
               </DropdownMenuContent>
             )}
           </DropdownMenu>
@@ -224,7 +223,6 @@ export default function MainPage() {
             <Button variant="ghost" className="w-full justify-start mb-2" onClick={() => handleNavigation('/about')}>About</Button>
             <Button variant="ghost" className="w-full justify-start mb-2" onClick={() => openAuthModal('login')}>Login</Button>
             <Button variant="ghost" className="w-full justify-start mb-2" onClick={() => openAuthModal('signup')}>Sign Up</Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => handleNavigation('/dashboard')}>Dashboard</Button>
           </motion.div>
         )}
       </AnimatePresence>

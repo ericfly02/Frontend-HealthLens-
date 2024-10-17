@@ -49,7 +49,6 @@ export default function AboutPage() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Login</DropdownMenuItem>
                 <DropdownMenuItem>Sign Up</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
               </DropdownMenuContent>
             )}
           </DropdownMenu>

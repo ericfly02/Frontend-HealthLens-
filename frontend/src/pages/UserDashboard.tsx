@@ -21,6 +21,8 @@ interface UserData {
   weight: number;
   sex: string;
   scans: number;
+  reports: number;
+  diseases: string[];
   //recentSymptoms: string[];
 }
 
@@ -70,14 +72,27 @@ export default function UserDashboard() {
         weight: userData?.weight,
         sex: userData?.sex,
         scans: userData?.scans,
+        reports: userData?.reports,
+        diseases: userData?.diseases,
         //recentSymptoms: userData?.recentSymptoms,
       };
     
-      await axios.post('https://backend-health-lens.vercel.app/user/email-report', reportData, {
+      await axios.post('https://backend-health-lens.vercel.app/user/email-report', userData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      await axios.post(
+        'https://backend-health-lens.vercel.app/user/increment-reports', 
+        {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
     
       alert('Report has been sent to your email!');
     } catch (err) {
@@ -137,7 +152,7 @@ export default function UserDashboard() {
               <TabsList className="grid w-full grid-cols-4 rounded-lg bg-indigo-100 p-1">
                 <TabsTrigger value="overview" className="rounded-md py-2">Overview</TabsTrigger>
                 <TabsTrigger value="upload" className="rounded-md py-2">Upload</TabsTrigger>
-                <TabsTrigger value="history" className="rounded-md py-2">Chat History</TabsTrigger>
+                {/*<TabsTrigger value="history" className="rounded-md py-2">Chat History</TabsTrigger>*/}
                 <TabsTrigger value="settings" className="rounded-md py-2">Settings</TabsTrigger>
               </TabsList>
               <TabsContent value="overview">
@@ -146,9 +161,11 @@ export default function UserDashboard() {
               <TabsContent value="upload">
                 <UploadTab />
               </TabsContent>
-              <TabsContent value="history">
-                <HistoryTab />
-              </TabsContent>
+              {/*
+             <TabsContent value="history">
+               <HistoryTab />
+             </TabsContent>
+             */}
               <TabsContent value="settings">
                 <SettingsTab userData={userData}/>
               </TabsContent>

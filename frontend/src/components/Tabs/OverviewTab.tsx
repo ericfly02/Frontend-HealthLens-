@@ -8,6 +8,7 @@ interface OverviewTabProps {
 }
 
 const OverviewTab = ({ userData }: OverviewTabProps) => {
+
   return (
     <Card>
       <CardHeader>
@@ -28,22 +29,11 @@ const OverviewTab = ({ userData }: OverviewTabProps) => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Active Chats</CardTitle>
-              <MessageSquare className="h-4 w-4 text-indigo-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3</div>
-              <p className="text-xs text-gray-500">2 new since yesterday</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Saved Reports</CardTitle>
               <Settings className="h-4 w-4 text-indigo-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-gray-500">View all reports</p>
+              <div className="text-2xl font-bold">{userData?.reports}</div>
             </CardContent>
           </Card>
         </div>
