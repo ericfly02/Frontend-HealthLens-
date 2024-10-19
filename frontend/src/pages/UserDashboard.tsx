@@ -23,7 +23,6 @@ interface UserData {
   scans: number;
   reports: number;
   diseases: string[];
-  //recentSymptoms: string[];
 }
 
 export default function UserDashboard() {
@@ -74,7 +73,6 @@ export default function UserDashboard() {
         scans: userData?.scans,
         reports: userData?.reports,
         diseases: userData?.diseases,
-        //recentSymptoms: userData?.recentSymptoms,
       };
     
       await axios.post('https://backend-health-lens.vercel.app/user/email-report', userData, {
@@ -101,8 +99,6 @@ export default function UserDashboard() {
     }
   };
   
-  
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-50 p-8">
       <header className="p-4 flex justify-between items-center bg-white bg-opacity-80 backdrop-blur-md">

@@ -16,12 +16,29 @@ interface ChatProps {
   confidence: number | null;
 }
 
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addListener(listener);
+    return () => media.removeListener(listener);
+  }, [matches, query]);
+
+  return matches;
+}
+
 export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence }: ChatProps) {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -86,17 +103,19 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
       <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 h-full flex flex-col">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
           <h3 className="text-xl md:text-2xl font-semibold text-indigo-700 mb-2 md:mb-0">AI Analysis in Progress</h3>
-          <Button
-            onClick={toggleSize}
-            variant="outline"
-            size="icon"
-            className="flex items-center space-x-2 text-sm"
-          >
-            {isFullSize ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-            <span className="hidden md:inline">{isFullSize ? 'Split View' : 'Full Chat'}</span>
-          </Button>
+          {!isMobile && (
+            <Button
+              onClick={toggleSize}
+              variant="outline"
+              size="icon"
+              className="flex items-center space-x-2 text-sm"
+            >
+              {isFullSize ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              <span className="hidden md:inline">{isFullSize ? 'Split View' : 'Full Chat'}</span>
+            </Button>
+          )}
         </div>
-        <div className={`flex flex-col ${isFullSize ? 'md:flex-col' : 'md:flex-row'} flex-grow overflow-hidden`}>
+        <div className={`flex flex-col ${isMobile ? '' : (isFullSize ? 'md:flex-col' : 'md:flex-row')} flex-grow overflow-hidden`}>
           <div className={`${isFullSize ? 'w-full' : 'w-full md:w-1/2 md:pr-3'} mb-4 md:mb-0 flex flex-col flex-grow`}>
             <div ref={chatContainerRef} className="bg-indigo-50 rounded-lg p-3 flex-grow overflow-y-auto mb-4">
               <AnimatePresence>
@@ -139,7 +158,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Send
                 </Button>
-                {/*
+                {/*}
                 {isRecording ? (
                   <Button onClick={handleStopRecording} className="flex-1 md:flex-none bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg flex items-center justify-center text-sm">
                     <StopCircle className="h-4 w-4 mr-2" />

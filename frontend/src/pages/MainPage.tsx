@@ -178,7 +178,20 @@ export default function MainPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-50 text-gray-800">
       <header className="p-4 flex justify-between items-center bg-white bg-opacity-80 backdrop-blur-md">
-        <h1 className="text-xl md:text-2xl font-bold text-indigo-600">HealthLens</h1>
+        <div className="flex items-center">
+          {step > 0 && (
+            <Button
+              onClick={handleBack}
+              variant="ghost"
+              size="icon"
+              className="mr-2 md:mr-4"
+            >
+              <ChevronLeft className="h-4 w-4 md:mr-1" />
+              <span className="hidden md:inline">Back</span>
+            </Button>
+          )}
+          <h1 className="text-xl md:text-2xl font-bold text-indigo-600">HealthLens</h1>
+        </div>
         <nav className="hidden md:flex items-center space-x-4">
           <Button variant="ghost" onClick={() => handleNavigation('/encyclopedia')}>Encyclopedia</Button>
           <Button variant="ghost" onClick={() => handleNavigation('/about')}>About</Button>
@@ -200,8 +213,8 @@ export default function MainPage() {
             </DropdownMenuTrigger>
             {isDropdownOpen && (
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={() => openAuthModal('login')}>Login  </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => openAuthModal('signup')}>Sign Up  </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openAuthModal('login')}>Login</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openAuthModal('signup')}>Sign Up</DropdownMenuItem>
               </DropdownMenuContent>
             )}
           </DropdownMenu>
@@ -227,26 +240,8 @@ export default function MainPage() {
         )}
       </AnimatePresence>
 
-      <main className="container mx-auto px-4 py-8 md:py-12 relative">
+      <main className="container mx-auto px-4 py-8 md:py-12">
         <AnimatePresence mode="wait">
-          {step > 0 && (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="absolute top-0 left-0 mt-4 ml-4"
-            >
-              <Button
-                onClick={handleBack}
-                variant="outline"
-                className="flex items-center space-x-2 bg-white bg-opacity-50 backdrop-blur-md hover:bg-opacity-75 transition-all"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                <span>Back</span>
-              </Button>
-            </motion.div>
-          )}
           {step === 0 && <DiseaseOptions onImageTypeSelect={handleImageTypeSelect} />}
           {step === 1 && <UploadImage imageType={imageType} onImageUpload={handleImageUpload} />}
           {step === 2 && (
@@ -262,7 +257,6 @@ export default function MainPage() {
                   prediction={prediction}
                   confidence={confidence}
                 />
-              
               )}
             </div>
           )}
@@ -307,4 +301,5 @@ export default function MainPage() {
       <SpeedInsights />
     </div>
   );
+
 }
