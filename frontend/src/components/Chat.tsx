@@ -35,10 +35,10 @@ function useMediaQuery(query: string) {
 export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence }: ChatProps) {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const audioChunks = useRef<Blob[]>([]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -48,46 +48,52 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
 
   const toggleSize = () => setIsFullSize(!isFullSize);
 
-  const handleStartRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+  const handleStartRecording = () => {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        const recorder = new MediaRecorder(stream);
+        setMediaRecorder(recorder);
 
-      recorder.ondataavailable = (event) => {
-        audioChunks.current.push(event.data);
-      };
+        recorder.ondataavailable = (event) => {
+          setAudioChunks(prev => [...prev, event.data]);
+        };
 
-      recorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
-        const formData = new FormData();
-        formData.append('audio', audioBlob);
-
-        try {
-          const response = await axios.post('https://backend-health-lens.vercel.app/speech/speech-to-text', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          console.log('Transcription:', response.data);
-        } catch (error) {
-          console.error('Error transcribing voice:', error);
-        }
-
-        audioChunks.current = [];
-      };
-
-      setMediaRecorder(recorder);
-      recorder.start();
-      setIsRecording(true);
-    } catch (err) {
-      console.error('Error accessing microphone:', err);
-    }
+        recorder.start();
+        setIsRecording(true);
+      })
+      .catch(error => console.error('Error accessing microphone:', error));
   };
 
-  const handleStopRecording = () => {
+  const handleStopRecording = async () => {
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        setAudioChunks([]);  // Clear chunks after recording
+
+        // Send the audio blob to the backend for transcription
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'audio.wav');
+
+        try {
+          const response = await fetch('/api/transcribe', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await response.json();
+          const transcription = data.transcription;
+          console.log('Transcription:', transcription);
+
+          // Display transcription in chat
+          // Update your chat state with transcription
+
+        } catch (error) {
+          console.error('Error transcribing audio:', error);
+        }
+      };
     }
   };
 
@@ -158,7 +164,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Send
                 </Button>
-                {/*}
+                
                 {isRecording ? (
                   <Button onClick={handleStopRecording} className="flex-1 md:flex-none bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg flex items-center justify-center text-sm">
                     <StopCircle className="h-4 w-4 mr-2" />
@@ -170,7 +176,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                     Record
                   </Button>
                 )}
-                */}
+                
               </div>
             </form>
           </div>
