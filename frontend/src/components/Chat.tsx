@@ -48,64 +48,77 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
 
   const toggleSize = () => setIsFullSize(!isFullSize);
 
-  const handleStartRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        const recorder = new MediaRecorder(stream);
-        setMediaRecorder(recorder);
-        
-        recorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            setAudioChunks(prev => [...prev, event.data]);
-          } else {
-            console.error('Received empty audio data.');
-          }
-        };
-  
-        recorder.start();
-        setIsRecording(true);
-      })
-      .catch(error => console.error('Error accessing microphone:', error));
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          setAudioChunks((prev) => [...prev, event.data]);
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+      setMediaRecorder(recorder);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
   };
-  
 
   const handleStopRecording = async () => {
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
-  
+
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        console.log('Audio chunks:', audioChunks); // Log the audio chunks
-        console.log('Audio blob size:', audioBlob.size); // Log the blob size
-  
-        // Check if the blob is empty
+        console.log('Audio chunks:', audioChunks);
+        console.log('Audio blob size:', audioBlob.size);
+
         if (audioBlob.size === 0) {
           console.error('Audio blob is empty.');
           return;
         }
-  
-        setAudioChunks([]);  // Clear chunks after recording
-  
+
+        setAudioChunks([]); // Clear chunks after recording
+
+        // Convert to FLAC using ffmpeg.js (if you decide to use it)
+        const flacBlob = await convertToFlac(audioBlob);
+
         // Send the audio blob to the backend for transcription
         const formData = new FormData();
-        formData.append('audio', audioBlob, 'audio.wav');
-  
+        formData.append('audio', flacBlob, 'audio.flac');
+
         try {
           const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           });
-  
+
           const transcription = response.data.transcription;
           console.log('Transcription:', transcription);
-  
         } catch (error) {
           console.error('Error transcribing audio:', error);
         }
       };
     }
+  };
+
+  const convertToFlac = async (audioBlob: Blob) => {
+    // Here you would implement the logic to convert audioBlob to FLAC using ffmpeg.js
+    // Example:
+    const { createFFmpeg, fetchFile } = require('@ffmpeg/ffmpeg');
+    const ffmpeg = createFFmpeg({ log: true });
+
+    await ffmpeg.load();
+    ffmpeg.FS('writeFile', 'audio.wav', await fetchFile(audioBlob));
+    await ffmpeg.run('-i', 'audio.wav', 'audio.flac');
+    const flacData = ffmpeg.FS('readFile', 'audio.flac');
+
+    return new Blob([flacData.buffer], { type: 'audio/flac' });
   };
   
   
