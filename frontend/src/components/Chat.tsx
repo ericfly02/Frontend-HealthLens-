@@ -7,6 +7,7 @@ import axios from 'axios';
 import PredictionCard from "./ui/PredictionCard";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 
+
 interface ChatProps {
   chatMessages: Array<{ text: string; isAI: boolean }>;
   onSendMessage: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -53,75 +54,58 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
 
+      // Reset audio chunks on start
+      setAudioChunks([]);
+
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          setAudioChunks((prev) => [...prev, event.data]);
+          setAudioChunks(prev => [...prev, event.data]);
         }
       };
 
-      recorder.start();
-      setIsRecording(true);
-      setMediaRecorder(recorder);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-    }
-  };
-
-  const handleStopRecording = async () => {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      setIsRecording(false);
-
-      mediaRecorder.onstop = async () => {
+      recorder.onstop = () => {
+        // Create a Blob from the audio chunks
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         console.log('Audio chunks:', audioChunks);
         console.log('Audio blob size:', audioBlob.size);
 
+        // Check if the blob is empty
         if (audioBlob.size === 0) {
           console.error('Audio blob is empty.');
           return;
         }
 
-        setAudioChunks([]); // Clear chunks after recording
-
-        // Convert to FLAC using ffmpeg.js (if you decide to use it)
-        const flacBlob = await convertToFlac(audioBlob);
-
         // Send the audio blob to the backend for transcription
         const formData = new FormData();
-        formData.append('audio', flacBlob, 'audio.flac');
+        formData.append('audio', audioBlob, 'audio.wav');
 
-        try {
-          const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
-          const transcription = response.data.transcription;
-          console.log('Transcription:', transcription);
-        } catch (error) {
+        axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(response => {
+          console.log('Transcription:', response.data.transcription);
+        })
+        .catch(error => {
           console.error('Error transcribing audio:', error);
-        }
+        });
       };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
     }
   };
 
-  const convertToFlac = async (audioBlob: Blob) => {
-    // Here you would implement the logic to convert audioBlob to FLAC using ffmpeg.js
-    // Example:
-    const { createFFmpeg, fetchFile } = require('@ffmpeg/ffmpeg');
-    const ffmpeg = createFFmpeg({ log: true });
-
-    await ffmpeg.load();
-    ffmpeg.FS('writeFile', 'audio.wav', await fetchFile(audioBlob));
-    await ffmpeg.run('-i', 'audio.wav', 'audio.flac');
-    const flacData = ffmpeg.FS('readFile', 'audio.flac');
-
-    return new Blob([flacData.buffer], { type: 'audio/flac' });
+  const handleStopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
   };
-  
-  
 
   return (
     <motion.div 
