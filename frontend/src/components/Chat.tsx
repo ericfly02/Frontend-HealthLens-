@@ -78,13 +78,13 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         formData.append('audio', audioBlob, 'audio.wav');
 
         try {
-          const response = await fetch('https://backend-health-lens.vercel.app/speech/transcribe', {
-            method: 'POST',
-            body: formData,
+          const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           });
 
-          const data = await response.json();
-          const transcription = data.transcription;
+          const transcription = response.data.transcription;
           console.log('Transcription:', transcription);
 
           // Display transcription in chat
