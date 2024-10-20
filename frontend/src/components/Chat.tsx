@@ -40,6 +40,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [stream, setStream] = useState<MediaStream | null>(null); // Store the stream
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -51,8 +52,9 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
 
   const handleStartRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      const microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setStream(microphoneStream); // Set the stream
+      const recorder = new MediaRecorder(microphoneStream);
 
       // Reset audio chunks on start
       setAudioChunks([]);
@@ -103,6 +105,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const handleStopRecording = () => {
     if (mediaRecorder) {
       mediaRecorder.stop();
+      stream?.getTracks().forEach(track => track.stop()); // Stop all tracks
       setIsRecording(false);
     }
   };
