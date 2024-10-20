@@ -68,34 +68,41 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
-
+  
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         setAudioChunks([]);  // Clear chunks after recording
+  
+        // Check the size of the Blob before sending
+        if (audioBlob.size > 0) {
+          const formData = new FormData();
+          formData.append('audio', audioBlob, 'audio.wav');
 
-        // Send the audio blob to the backend for transcription
-        const formData = new FormData();
-        formData.append('audio', audioBlob, 'audio.wav');
-
-        try {
-          const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
-          const transcription = response.data.transcription;
-          console.log('Transcription:', transcription);
-
-          // Display transcription in chat
-          // Update your chat state with transcription
-
-        } catch (error) {
-          console.error('Error transcribing audio:', error);
+          console.log('Audio Blob Size:', audioBlob.size); // Log the size
+  
+          try {
+            const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+  
+            const transcription = response.data.transcription;
+            console.log('Transcription:', transcription);
+  
+            // Display transcription in chat
+            // Update your chat state with transcription
+  
+          } catch (error) {
+            console.error('Error transcribing audio:', error);
+          }
+        } else {
+          console.error('Audio blob is empty.');
         }
       };
     }
   };
+  
 
   return (
     <motion.div 
