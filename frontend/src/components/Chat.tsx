@@ -53,16 +53,21 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
       .then(stream => {
         const recorder = new MediaRecorder(stream);
         setMediaRecorder(recorder);
-
+        
         recorder.ondataavailable = (event) => {
-          setAudioChunks(prev => [...prev, event.data]);
+          if (event.data.size > 0) {
+            setAudioChunks(prev => [...prev, event.data]);
+          } else {
+            console.error('Received empty audio data.');
+          }
         };
-
+  
         recorder.start();
         setIsRecording(true);
       })
       .catch(error => console.error('Error accessing microphone:', error));
   };
+  
 
   const handleStopRecording = async () => {
     if (mediaRecorder) {
@@ -71,37 +76,38 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        console.log('Audio chunks:', audioChunks); // Log the audio chunks
+        console.log('Audio blob size:', audioBlob.size); // Log the blob size
+  
+        // Check if the blob is empty
+        if (audioBlob.size === 0) {
+          console.error('Audio blob is empty.');
+          return;
+        }
+  
         setAudioChunks([]);  // Clear chunks after recording
   
-        // Check the size of the Blob before sending
-        if (audioBlob.size > 0) {
-          const formData = new FormData();
-          formData.append('audio', audioBlob, 'audio.wav');
-
-          console.log('Audio Blob Size:', audioBlob.size); // Log the size
+        // Send the audio blob to the backend for transcription
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'audio.wav');
   
-          try {
-            const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            });
+        try {
+          const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
   
-            const transcription = response.data.transcription;
-            console.log('Transcription:', transcription);
+          const transcription = response.data.transcription;
+          console.log('Transcription:', transcription);
   
-            // Display transcription in chat
-            // Update your chat state with transcription
-  
-          } catch (error) {
-            console.error('Error transcribing audio:', error);
-          }
-        } else {
-          console.error('Audio blob is empty.');
+        } catch (error) {
+          console.error('Error transcribing audio:', error);
         }
       };
     }
   };
+  
   
 
   return (
