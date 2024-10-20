@@ -78,7 +78,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         formData.append('audio', audioBlob, 'audio.wav');
 
         try {
-          const response = await fetch('/api/transcribe', {
+          const response = await fetch('https://backend-health-lens.vercel.app/speech/transcribe', {
             method: 'POST',
             body: formData,
           });
