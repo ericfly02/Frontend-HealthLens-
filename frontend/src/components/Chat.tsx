@@ -52,7 +52,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream, { mimeType: 'audio/wav' }); // Specify MIME type
+      const recorder = new MediaRecorder(stream);
       setMediaRecorder(recorder);
 
       recorder.ondataavailable = (event) => {
