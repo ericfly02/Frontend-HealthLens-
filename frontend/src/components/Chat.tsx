@@ -49,48 +49,48 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
 
   const toggleSize = () => setIsFullSize(!isFullSize);
 
-    // Function to start recording
-    const handleStartRecording = async () => {
-      try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          const recorder = new MediaRecorder(stream);
-          setMediaRecorder(recorder);
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream, { mimeType: 'audio/wav' }); // Specify MIME type
+      setMediaRecorder(recorder);
 
-          recorder.ondataavailable = (event) => {
-              setAudioChunks((prev) => [...prev, event.data]);
-          };
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          setAudioChunks((prev) => [...prev, event.data]);
+        }
+      };
 
-          recorder.start();
-          setIsRecording(true);
-      } catch (err) {
-          console.error('Error accessing microphone:', err);
-      }
+      recorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      console.error('Error accessing microphone:', err);
+    }
   };
 
-  // Function to stop recording and send audio to the backend
   const handleStopRecording = async () => {
-      if (mediaRecorder) {
-          mediaRecorder.stop();
-          mediaRecorder.onstop = async () => {
-              const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-              const formData = new FormData();
-              formData.append('audio', audioBlob, 'recording.wav');
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.wav');
 
-              try {
-                  const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
-                      headers: {
-                          'Content-Type': 'multipart/form-data',
-                      },
-                  });
-                  console.log('Transcription:', response.data.transcription);
-              } catch (error) {
-                  console.error('Error uploading audio:', error);
-              }
+        try {
+          const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          console.log('Transcription:', response.data.transcription);
+        } catch (error) {
+          console.error('Error uploading audio:', error);
+        }
 
-              setAudioChunks([]); // Clear chunks for next recording
-          };
-          setIsRecording(false);
-      }
+        setAudioChunks([]); // Clear chunks for next recording
+      };
+      setIsRecording(false);
+    }
   };
 
   return (
