@@ -52,7 +52,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/wav' });
+      mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/flac' });
   
       mediaRecorderRef.current.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
@@ -70,9 +70,9 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/flac' });
         const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.wav'); // Provide a filename
+        formData.append('audio', audioBlob, 'recording.flac'); // Provide a filename
 
         console.log('Uploading audio file...');
         console.log('Audio blob:', audioBlob);
