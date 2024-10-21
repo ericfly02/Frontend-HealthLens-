@@ -71,12 +71,8 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
       mediaRecorderRef.current.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.wav'); // Provide a filename
-
-        console.log('Uploading audio file...');
-        console.log('Audio blob:', audioBlob);
-        console.log('Form data:', formData);
-
+        formData.append('audio', audioBlob, 'recording.wav');
+  
         try {
           const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
             headers: {
@@ -84,15 +80,15 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
             },
           });
           console.log('Transcription:', response.data.transcription);
-          // Handle the transcription (e.g., display it in chat)
         } catch (error) {
           console.error('Error uploading audio file:', error);
         }
       };
       setIsRecording(false);
-      audioChunksRef.current = []; // Clear the audio chunks for the next recording
+      audioChunksRef.current = [];
     }
   };
+  
 
   return (
     <motion.div 
