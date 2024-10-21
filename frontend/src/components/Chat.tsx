@@ -52,18 +52,19 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
-
+      mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/wav' });
+  
       mediaRecorderRef.current.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
       };
-
+  
       mediaRecorderRef.current.start();
       setIsRecording(true);
     } catch (error) {
       console.error('Error accessing the microphone', error);
     }
   };
+  
 
   const handleStopRecording = async () => {
     if (mediaRecorderRef.current) {
