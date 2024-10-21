@@ -38,8 +38,8 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const [isRecording, setIsRecording] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -52,33 +52,31 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      setMediaRecorder(recorder);
+      mediaRecorderRef.current = new MediaRecorder(stream);
 
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          setAudioChunks((prev) => [...prev, event.data]);
-        }
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
       };
 
-      recorder.start();
+      mediaRecorderRef.current.start();
       setIsRecording(true);
-    } catch (err) {
-      console.error('Error accessing microphone:', err);
+    } catch (error) {
+      console.error('Error accessing the microphone', error);
     }
   };
 
   const handleStopRecording = async () => {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.wav');
+        formData.append('audio', audioBlob, 'recording.wav'); // Provide a filename
 
+        console.log('Uploading audio file...');
         console.log('Audio blob:', audioBlob);
-        console.log('Audio chunks:', audioChunks.length);
-        
+        console.log('Form data:', formData);
+
         try {
           const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
             headers: {
@@ -86,13 +84,13 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
             },
           });
           console.log('Transcription:', response.data.transcription);
+          // Handle the transcription (e.g., display it in chat)
         } catch (error) {
-          console.error('Error uploading audio:', error);
+          console.error('Error uploading audio file:', error);
         }
-
-        setAudioChunks([]); // Clear chunks for next recording
       };
       setIsRecording(false);
+      audioChunksRef.current = []; // Clear the audio chunks for the next recording
     }
   };
 
