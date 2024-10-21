@@ -38,9 +38,8 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
   const [isRecording, setIsRecording] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-  const [stream, setStream] = useState<MediaStream | null>(null); // Store the stream
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -50,64 +49,48 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
 
   const toggleSize = () => setIsFullSize(!isFullSize);
 
-  const handleStartRecording = async () => {
-    try {
-      const microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setStream(microphoneStream); // Set the stream
-      const recorder = new MediaRecorder(microphoneStream);
+    // Function to start recording
+    const handleStartRecording = async () => {
+      try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const recorder = new MediaRecorder(stream);
+          setMediaRecorder(recorder);
 
-      // Reset audio chunks on start
-      setAudioChunks([]);
+          recorder.ondataavailable = (event) => {
+              setAudioChunks((prev) => [...prev, event.data]);
+          };
 
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          setAudioChunks(prev => [...prev, event.data]);
-        }
-      };
-
-      recorder.onstop = () => {
-        // Create a Blob from the audio chunks
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        console.log('Audio chunks:', audioChunks);
-        console.log('Audio blob size:', audioBlob.size);
-
-        // Check if the blob is empty
-        if (audioBlob.size === 0) {
-          console.error('Audio blob is empty.');
-          return;
-        }
-
-        // Send the audio blob to the backend for transcription
-        const formData = new FormData();
-        formData.append('audio', audioBlob, 'audio.wav');
-
-        axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then(response => {
-          console.log('Transcription:', response.data.transcription);
-        })
-        .catch(error => {
-          console.error('Error transcribing audio:', error);
-        });
-      };
-
-      recorder.start();
-      setMediaRecorder(recorder);
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-    }
+          recorder.start();
+          setIsRecording(true);
+      } catch (err) {
+          console.error('Error accessing microphone:', err);
+      }
   };
 
-  const handleStopRecording = () => {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      stream?.getTracks().forEach(track => track.stop()); // Stop all tracks
-      setIsRecording(false);
-    }
+  // Function to stop recording and send audio to the backend
+  const handleStopRecording = async () => {
+      if (mediaRecorder) {
+          mediaRecorder.stop();
+          mediaRecorder.onstop = async () => {
+              const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+              const formData = new FormData();
+              formData.append('audio', audioBlob, 'recording.wav');
+
+              try {
+                  const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+                      headers: {
+                          'Content-Type': 'multipart/form-data',
+                      },
+                  });
+                  console.log('Transcription:', response.data.transcription);
+              } catch (error) {
+                  console.error('Error uploading audio:', error);
+              }
+
+              setAudioChunks([]); // Clear chunks for next recording
+          };
+          setIsRecording(false);
+      }
   };
 
   return (
