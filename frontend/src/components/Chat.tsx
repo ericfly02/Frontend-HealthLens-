@@ -69,7 +69,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav; codecs=PCM' });
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.wav');
   
