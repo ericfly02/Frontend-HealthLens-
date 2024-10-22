@@ -74,7 +74,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         formData.append('audio', audioBlob, 'recording.wav');
   
         try {
-          const response = await axios.post('https://backend-health-lens.vercel.app/speech/transcribe', formData, {
+          const response = await axios.post('https://www.healthlens.beauty/speech/transcribe', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
