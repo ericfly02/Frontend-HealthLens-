@@ -6,7 +6,7 @@ import { MessageSquare, Maximize2, Minimize2, Mic, StopCircle, Bot, User } from 
 import axios from 'axios';
 import PredictionCard from "./ui/PredictionCard";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
-
+import Loader from './ui/Loader';
 
 interface ChatProps {
   chatMessages: Array<{ text: string; isAI: boolean }>;
@@ -15,6 +15,7 @@ interface ChatProps {
   uploadedImageUrl: string | null;
   prediction: string | null;
   confidence: number | null;
+  loading: boolean;
 }
 
 function useMediaQuery(query: string) {
@@ -33,7 +34,7 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence }: ChatProps) {
+export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence, loading }: ChatProps) {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -132,7 +133,14 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                         <AvatarFallback><Bot className="text-indigo-600" /></AvatarFallback>
                       </Avatar>
                     )}
-                    <div className={`max-w-[70%] p-3 rounded-lg text-sm md:text-base ${message.isAI ? 'bg-indigo-100 text-indigo-800' : 'bg-teal-100 text-teal-800'}`}>
+                    <div
+                      key={index}
+                      className={`p-4 rounded-lg ${
+                        message.isAI
+                          ? 'bg-indigo-100 text-indigo-800 self-start'
+                          : 'bg-gray-100 text-gray-800 self-end'
+                      }`}
+                    >
                       {message.text}
                     </div>
                     {!message.isAI && (
@@ -142,6 +150,11 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                     )}
                   </motion.div>
                 ))}
+                {loading && (
+                  <div className="self-start">
+                    <Loader />
+                  </div>
+                )}
               </AnimatePresence>
             </div>
 

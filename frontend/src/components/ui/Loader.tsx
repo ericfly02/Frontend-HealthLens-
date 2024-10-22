@@ -1,12 +1,20 @@
 // components/ui/Loader.tsx
-import React from 'react';
+import { motion } from 'framer-motion';
 
-const Loader: React.FC = () => {
+const Loader = () => {
   return (
-    <div className="flex justify-center items-center space-x-2">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600"></div>
-      <span>Processing your image, please wait...</span>
-    </div>
+    <motion.div
+      className="flex items-center space-x-2"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
+    >
+      <div className="rounded-full h-3 w-3 bg-indigo-500 animate-bounce"></div>
+      <div className="rounded-full h-3 w-3 bg-indigo-500 animate-bounce delay-75"></div>
+      <div className="rounded-full h-3 w-3 bg-indigo-500 animate-bounce delay-150"></div>
+      <span className="text-gray-500 text-sm">Thinking...</span>
+    </motion.div>
   );
 };
 
