@@ -13,6 +13,7 @@ import Signup from '../components/Auth/Signup';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import axios from 'axios';
 import Loader from "../components/ui/Loader";
+import ChatLoader from '../components/ui/ChatLoader';
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -27,6 +28,9 @@ export default function MainPage() {
   const [prediction, setPrediction] = useState(''); 
   const [confidence, setConfidence] = useState<number>(0);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [isTranscriptionLoading, setIsTranscriptionLoading] = useState(false);
+  const [isMessageLoading, setIsMessageLoading] = useState(false);
+
 
   const handleImageTypeSelect = (type: 'skin' | 'eye' | 'nail') => {
     setImageType(type);
@@ -37,7 +41,7 @@ export default function MainPage() {
     // Show user message in the chat
     setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
   
-    // Show loader while waiting for transcription
+    // Show loader while waiting for the response
     setLoading(true);
   
     try {
@@ -63,11 +67,18 @@ export default function MainPage() {
     }
   };
   
+   
   const handleTranscription = async (transcribedText: string) => {
     setTranscription(transcribedText);
     console.log("Received transcription:", transcribedText);
+  
+    // Show loader while waiting for the response
+    setLoading(true);
+  
     await sendMessageToBackend(transcribedText);
   };
+  
+  
 
   const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -252,20 +263,20 @@ export default function MainPage() {
           {step === 1 && <UploadImage imageType={imageType} onImageUpload={handleImageUpload} />}
           {step === 2 && (
             <div className="flex-grow overflow-auto">
-              {loading ? (
-                <Loader />
-              ) : (
-                <Chat
-                  chatMessages={chatMessages}
-                  onSendMessage={handleSendMessage}
-                  imageType={imageType}
-                  uploadedImageUrl={uploadedImageUrl}
-                  prediction={prediction}
-                  confidence={confidence}
-                  loading={loading}
-                  onTranscription={handleTranscription}
-                />
-              )}
+            {(isTranscriptionLoading || isMessageLoading) ? (
+              <ChatLoader />
+            ) : (
+              <Chat
+                chatMessages={chatMessages}
+                onSendMessage={handleSendMessage}
+                imageType={imageType}
+                uploadedImageUrl={uploadedImageUrl}
+                prediction={prediction}
+                confidence={confidence}
+                loading={loading}  // Pass loading state here
+                onTranscription={handleTranscription}
+              />
+            )}
             </div>
           )}
         </AnimatePresence>

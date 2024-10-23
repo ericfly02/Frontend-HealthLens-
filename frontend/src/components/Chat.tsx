@@ -162,19 +162,27 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="flex items-start mb-4 justify-start"
+                    className="flex items-start mb-4 justify-end"
                   >
                     <Avatar className="w-8 h-8 mr-2">
-                      <AvatarFallback><Bot className="text-indigo-600" /></AvatarFallback>
+                      <AvatarFallback><User className="text-indigo-600" /></AvatarFallback>
                     </Avatar>
-                    <ChatLoader /> {/* Shows while transcribing */}
+                    <ChatLoader />
                   </motion.div>
                 )}
 
                 {loading && (
-                  <div className="self-start">
-                    <Loader /> {/* Shows while prediction or another process is loading */}
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-start mb-4 justify-start"
+                  >
+                    <Avatar className="w-8 h-8 mr-2">
+                      <AvatarFallback><Avatar className="text-indigo-600" /></AvatarFallback>
+                    </Avatar>
+                    <ChatLoader />
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
