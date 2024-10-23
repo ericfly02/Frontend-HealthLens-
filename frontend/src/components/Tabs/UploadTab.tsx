@@ -14,6 +14,8 @@ const UploadTab = () => {
   const [loading, setLoading] = useState(false); // Loading state for AI analysis
   const [prediction, setPrediction] = useState(''); 
   const [confidence, setConfidence] = useState<number>(0);
+  const [transcription, setTranscription] = useState<string | null>(null);
+
 
   const handleBack = () => {
     if (uploadStep > 0) setUploadStep((prev) => prev - 1);
@@ -39,6 +41,55 @@ const UploadTab = () => {
     }
   };
 
+  const sendMessageToBackend = async (userMessage: string) => {
+    // Show user message in the chat
+    setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
+  
+    // Show loader while waiting for transcription
+    setLoading(true);
+  
+    try {
+      const sessionId = localStorage.getItem('sessionId') || null;
+      const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
+        message: userMessage,
+        sessionId,
+      });
+  
+      const botReply = response.data.watsonResponse;
+      localStorage.setItem('sessionId', response.data.sessionId);
+  
+      // Add the bot reply to chat and stop the loader
+      setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setChatMessages(prev => [
+        ...prev,
+        { text: 'There was an error connecting to the chatbot. Please try again later.', isAI: true }
+      ]);
+    } finally {
+      setLoading(false); // Stop showing the loader
+    }
+  };
+  
+
+  const handleTranscription = async (transcribedText: string) => {
+    setTranscription(transcribedText);
+    console.log("Received transcription:", transcribedText);
+    await sendMessageToBackend(transcribedText);
+  };
+
+  const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const input = form.elements.namedItem('message') as HTMLInputElement;
+    const userMessage = input.value;
+    form.reset();
+    
+    await sendMessageToBackend(userMessage);
+  };
+  
+  
+
   const handlePrediction = async (disease: string) => {
     try {
       const token = localStorage.getItem('token');
@@ -53,43 +104,6 @@ const UploadTab = () => {
       );
     } catch (error) {
       console.error('Error adding disease:', error);
-    }
-  };
-
-  const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    
-    const form = event.target as HTMLFormElement;
-    const input = form.elements.namedItem('message') as HTMLInputElement;
-    const userMessage = input.value;
-
-    // Show user message in the chat
-    setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
-    form.reset();
-
-    // Show loader while waiting for transcription
-    setLoading(true);
-
-    try {
-      const sessionId = localStorage.getItem('sessionId') || null;
-      const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
-        message: userMessage,
-        sessionId,
-      });
-
-      const botReply = response.data.watsonResponse;
-      localStorage.setItem('sessionId', response.data.sessionId);
-
-      // Add the bot reply to chat and stop the loader
-      setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setChatMessages(prev => [
-        ...prev,
-        { text: 'There was an error connecting to the chatbot. Please try again later.', isAI: true }
-      ]);
-    } finally {
-      setLoading(false); // Stop showing the loader
     }
   };
 
@@ -174,6 +188,7 @@ const UploadTab = () => {
             prediction={prediction}
             confidence={confidence}
             loading={loading}
+            onTranscription={handleTranscription}
           />
           <Button
             onClick={handleBack}

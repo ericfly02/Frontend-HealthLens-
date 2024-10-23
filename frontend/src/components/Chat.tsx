@@ -7,6 +7,8 @@ import axios from 'axios';
 import PredictionCard from "./ui/PredictionCard";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import Loader from './ui/Loader';
+import ChatLoader from './ui/ChatLoader';
+import { on } from 'events';
 
 interface ChatProps {
   chatMessages: Array<{ text: string; isAI: boolean }>;
@@ -16,6 +18,7 @@ interface ChatProps {
   prediction: string | null;
   confidence: number | null;
   loading: boolean;
+  onTranscription: (transcription: string) => void;
 }
 
 function useMediaQuery(query: string) {
@@ -34,9 +37,10 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence, loading }: ChatProps) {
+export default function Chat({ chatMessages, onSendMessage, imageType, uploadedImageUrl, prediction, confidence, loading, onTranscription }: ChatProps) {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -46,7 +50,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [chatMessages]);
+  }, [chatMessages, isTranscribing]);
 
   const toggleSize = () => setIsFullSize(!isFullSize);
 
@@ -74,6 +78,7 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.wav');
   
+        setIsTranscribing(true); // Set to true when transcription starts
         try {
           const response = await axios.post('https://www.healthlens.beauty/speech/transcribe', formData, {
             headers: {
@@ -81,8 +86,11 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
             },
           });
           console.log('Transcription:', response.data.transcription);
+          onTranscription(response.data.transcription);
         } catch (error) {
           console.error('Error uploading audio file:', error);
+        } finally {
+          setIsTranscribing(false); // Set to false once transcription is done
         }
       };
       setIsRecording(false);
@@ -134,7 +142,6 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                       </Avatar>
                     )}
                     <div
-                      key={index}
                       className={`p-4 rounded-lg ${
                         message.isAI
                           ? 'bg-indigo-100 text-indigo-800 self-start'
@@ -150,9 +157,23 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
                     )}
                   </motion.div>
                 ))}
+                {isTranscribing && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-start mb-4 justify-start"
+                  >
+                    <Avatar className="w-8 h-8 mr-2">
+                      <AvatarFallback><Bot className="text-indigo-600" /></AvatarFallback>
+                    </Avatar>
+                    <ChatLoader /> {/* Shows while transcribing */}
+                  </motion.div>
+                )}
+
                 {loading && (
                   <div className="self-start">
-                    <Loader />
+                    <Loader /> {/* Shows while prediction or another process is loading */}
                   </div>
                 )}
               </AnimatePresence>
