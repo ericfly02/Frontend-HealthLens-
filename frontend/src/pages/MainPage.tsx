@@ -124,9 +124,15 @@ export default function MainPage() {
     
       const prediction = response.data.prediction;
       const confidence = response.data.confidence;
-      const confidenceAux = Number((confidence * 100).toFixed(2));
-      setConfidence(confidenceAux);
-      setPrediction(prediction);
+      if(prediction === 'malignant' && confidence < 0.9) {
+        setConfidence(0);
+        setPrediction('Not Conclusive');
+      }
+      else{
+        const confidenceAux = Number((confidence * 100).toFixed(2));
+        setConfidence(confidenceAux);
+        setPrediction(prediction);
+      }
 
       // Add prediction result to chat messages
       /*
