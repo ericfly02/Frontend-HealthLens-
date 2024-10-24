@@ -50,11 +50,8 @@ export default function MainPage() {
         message: userMessage,
         //sessionId,
       });
-      console.log("Response from backend:", response.data.response);
-      console.log("Response from backend:", response.data[0]);
-      console.log("Response from backend:", response.data[0].response);
-  
-      const botReply = response.data;
+ 
+      const botReply = response.data.response;
       //localStorage.setItem('sessionId', response.data.sessionId);
   
       // Add the bot reply to chat and stop the loader
