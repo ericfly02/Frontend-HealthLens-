@@ -50,8 +50,10 @@ export default function MainPage() {
         message: userMessage,
         sessionId,
       });
+
+      console.log("Response from backend:", response.data);
   
-      const botReply = response.data.watsonResponse;
+      const botReply = response.data;
       localStorage.setItem('sessionId', response.data.sessionId);
   
       // Add the bot reply to chat and stop the loader
