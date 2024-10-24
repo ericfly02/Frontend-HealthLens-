@@ -50,7 +50,7 @@ export default function MainPage() {
         message: userMessage,
         //sessionId,
       });
-      console.log("Response from backend:", response.data);
+      console.log("Response from backend:", response.data.response);
       console.log("Response from backend:", response.data[0]);
       console.log("Response from backend:", response.data[0].response);
   
