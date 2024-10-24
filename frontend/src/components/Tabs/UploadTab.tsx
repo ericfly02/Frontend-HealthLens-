@@ -45,18 +45,18 @@ const UploadTab = () => {
     // Show user message in the chat
     setChatMessages(prev => [...prev, { text: userMessage, isAI: false }]);
   
-    // Show loader while waiting for transcription
+    // Show loader while waiting for the response
     setLoading(true);
   
     try {
-      const sessionId = localStorage.getItem('sessionId') || null;
+      //const sessionId = localStorage.getItem('sessionId') || null;
       const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
         message: userMessage,
-        sessionId,
+        //sessionId,
       });
-  
-      const botReply = response.data.watsonResponse;
-      localStorage.setItem('sessionId', response.data.sessionId);
+ 
+      const botReply = response.data.response;
+      //localStorage.setItem('sessionId', response.data.sessionId);
   
       // Add the bot reply to chat and stop the loader
       setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
@@ -74,7 +74,6 @@ const UploadTab = () => {
 
   const handleTranscription = async (transcribedText: string) => {
     setTranscription(transcribedText);
-    console.log("Received transcription:", transcribedText);
     await sendMessageToBackend(transcribedText);
   };
 

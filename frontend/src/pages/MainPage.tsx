@@ -70,7 +70,6 @@ export default function MainPage() {
    
   const handleTranscription = async (transcribedText: string) => {
     setTranscription(transcribedText);
-    console.log("Received transcription:", transcribedText);
   
     // Show loader while waiting for the response
     setLoading(true);

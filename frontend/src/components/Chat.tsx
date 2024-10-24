@@ -85,7 +85,6 @@ export default function Chat({ chatMessages, onSendMessage, imageType, uploadedI
               'Content-Type': 'multipart/form-data',
             },
           });
-          console.log('Transcription:', response.data.transcription);
           onTranscription(response.data.transcription);
         } catch (error) {
           console.error('Error uploading audio file:', error);
