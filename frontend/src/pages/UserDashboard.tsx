@@ -37,6 +37,12 @@ export default function UserDashboard() {
     setIsDropdownOpen(prev => !prev)
   }
 
+  // handle logout function to delete token from local storage
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  }
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(prev => !prev)
   }
@@ -134,7 +140,7 @@ export default function UserDashboard() {
           <Button variant="ghost" className="w-full text-left mb-2" onClick={() => navigate('/')}>Home</Button>
           <Button variant="ghost" className="w-full text-left mb-2" onClick={() => navigate('/encyclopedia')}>Encyclopedia</Button>
           <Button variant="ghost" className="w-full text-left mb-2" onClick={() => navigate('/about')}>About</Button>
-          <Button variant="ghost" className="w-full text-left" onClick={() => navigate('/')}>Logout</Button>
+          <Button variant="ghost" className="w-full text-left" onClick={(handleLogout)}>Logout</Button>
         </div>
       )}
 
