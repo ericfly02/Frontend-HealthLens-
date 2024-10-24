@@ -1,15 +1,15 @@
 import React from 'react';
-import { Book, BarChart, MessageSquare } from 'lucide-react';
+import { Book, MessageSquare, Code } from 'lucide-react';
 import FeatureCard from './FeatureCard';
 import { motion } from 'framer-motion';
 
 interface FeatureGridProps {
   onConsultationClick: () => void;
-  onDashboardClick: () => void;
   onLearnMoreClick: () => void;
+  onResourcesClick: () => void;
 }
 
-export default function FeatureGrid({ onConsultationClick, onDashboardClick, onLearnMoreClick }: FeatureGridProps) {
+export default function FeatureGrid({ onConsultationClick, onLearnMoreClick, onResourcesClick }: FeatureGridProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -18,25 +18,25 @@ export default function FeatureGrid({ onConsultationClick, onDashboardClick, onL
       className="mt-16 grid md:grid-cols-3 gap-8"
     >
       <FeatureCard
-        icon={<Book />}
+        icon={<Book className="w-8 h-8 text-indigo-600" />}
         title="Skin Encyclopedia"
         description="Explore a comprehensive database of skin conditions and treatments."
         buttonText="Learn More"
         onClick={onLearnMoreClick}
       />
       <FeatureCard
-        icon={<BarChart />}
-        title="Personalized Insights"
-        description="Track your skin health over time with AI-powered analytics."
-        buttonText="View Insights"
-        onClick={onDashboardClick}
-      />
-      <FeatureCard
-        icon={<MessageSquare />}
+        icon={<MessageSquare className="w-8 h-8 text-indigo-600" />}
         title="Expert Consultations"
         description="Connect with dermatologists for professional advice."
         buttonText="Book a Session"
         onClick={onConsultationClick}
+      />
+      <FeatureCard
+        icon={<Code className="w-8 h-8 text-indigo-600" />}
+        title="Project Resources"
+        description="Explore our codebase and watch our project video."
+        buttonText="View Resources"
+        onClick={onResourcesClick}
       />
     </motion.div>
   );

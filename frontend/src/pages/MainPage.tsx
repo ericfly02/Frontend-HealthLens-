@@ -287,8 +287,8 @@ export default function MainPage() {
         </AnimatePresence>
         <FeatureGrid 
           onConsultationClick={() => handleNavigation('/consultation')} 
-          onDashboardClick={() => handleNavigation('/dashboard')} 
           onLearnMoreClick={() => handleNavigation('/encyclopedia')}
+          onResourcesClick={() => handleNavigation('/resources')}
         />
       </main>
 
