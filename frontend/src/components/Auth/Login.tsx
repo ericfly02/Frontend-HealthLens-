@@ -5,7 +5,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 interface LoginProps {
   onClose: () => void;
@@ -18,7 +18,7 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +28,8 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
         email: email,
         password: password,
       });
-      // Save the token in localStorage
       localStorage.setItem('token', response.data.token);
-      navigate('/dashboard'); // Redirect to UserDashboard on success
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Login error:', error);
@@ -49,8 +48,8 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
       <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">Welcome Back</h2>
       {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="email">Email</Label>
+        <div className="flex flex-col items-center">
+          <Label htmlFor="email" className="self-center mb-2">Email</Label>
           <Input 
             id="email" 
             type="email" 
@@ -58,11 +57,12 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
             required 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="max-w-xs w-full"
           />
         </div>
-        <div>
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
+        <div className="flex flex-col items-center">
+          <Label htmlFor="password" className="self-center mb-2">Password</Label>
+          <div className="relative max-w-xs w-full">
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
@@ -70,6 +70,7 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="w-full"
             />
             <button
               type="button"
@@ -80,7 +81,7 @@ export default function Login({ onClose, onSwitchToSignup, onLogin }: LoginProps
             </button>
           </div>
         </div>
-        <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+        <Button type="submit" className="w-full max-w-xs mx-auto block bg-indigo-600 hover:bg-indigo-700 text-white">
           Sign In
         </Button>
       </form>
