@@ -7,14 +7,23 @@ import AboutPage from './pages/AboutPage';
 import EncyclopediaPage from './pages/EncyclopediaPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Login from './components/Auth/Login';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
+
   const handleCloseLogin = () => {
     setShowLogin(false);
   };
+
+  const handleLoginSuccess = () => {
+    setShowLogin(false);
+    navigate('/dashboard'); // Redirect to dashboard after login
+  };
 
   const handleSwitchToSignup = () => {
     // Handle switch to signup logic if necessary
@@ -26,10 +35,12 @@ function App() {
         <Route 
           path="/dashboard" 
           element={
-            <ProtectedRoute 
-              element={<UserDashboard />} 
-              loginComponent={<Login onClose={handleCloseLogin} onSwitchToSignup={handleSwitchToSignup} onLogin={() => setShowLogin(false)} />} />} 
-            />
+            <ProtectedRoute
+            element={<UserDashboard />}
+            loginComponent={<Login onClose={handleCloseLogin} onSwitchToSignup={handleSwitchToSignup} onLogin={handleLoginSuccess} />}
+          />
+          }
+        />
         <Route path="/consultation" element={<ConsultationPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/encyclopedia" element={<EncyclopediaPage />} />
