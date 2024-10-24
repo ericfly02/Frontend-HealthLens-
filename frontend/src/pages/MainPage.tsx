@@ -45,16 +45,16 @@ export default function MainPage() {
     setLoading(true);
   
     try {
-      const sessionId = localStorage.getItem('sessionId') || null;
+      //const sessionId = localStorage.getItem('sessionId') || null;
       const response = await axios.post('https://backend-health-lens.vercel.app/chat/start-conversation', {
         message: userMessage,
-        sessionId,
+        //sessionId,
       });
 
       console.log("Response from backend:", response.data);
   
       const botReply = response.data;
-      localStorage.setItem('sessionId', response.data.sessionId);
+      //localStorage.setItem('sessionId', response.data.sessionId);
   
       // Add the bot reply to chat and stop the loader
       setChatMessages(prev => [...prev, { text: botReply, isAI: true }]);
