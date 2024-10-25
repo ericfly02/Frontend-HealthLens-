@@ -39,7 +39,7 @@ Note: Our references are found in the `REFERENCES.md` page.
 
 ### Important References
 
-Our project is currently live-deployed at [HealthLens](www.healthlens.app). Feel free to check it out!
+Our project is currently live-deployed at [HealthLens](https://www.healthlens.app/). Feel free to check it out!
 
 This project was created using three repositories, each with their specific documentation. Here are the links to the other two: [backend](https://github.com/ericfly02/Backend-HealthLens) and [Flask service](https://github.com/ericfly02/Flask-Service-HealthLens)
 
@@ -110,7 +110,7 @@ In order to run this project locally, you must clone the other two repositories 
 
 ### Live demo
 
-You can find a running system to test at [our app's site](www.healthlens.app)
+You can find a running system to test at [our app's site](https://www.healthlens.app/)
 
 ---
 
