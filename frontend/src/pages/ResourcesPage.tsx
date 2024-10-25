@@ -101,7 +101,7 @@ export default function ResourcesPage() {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                src="https://www.youtube.com/embed/AxZnPDS9ioE"
                 title="Project Video"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -116,7 +116,7 @@ export default function ResourcesPage() {
               className="w-full justify-center text-center hover:bg-red-50 transition-colors duration-300 mt-4"
             >
               <a
-                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                href="https://www.youtube.com/watch?v=AxZnPDS9ioE"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center py-3"
